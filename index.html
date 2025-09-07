@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MakeAI - Локальный искусственный интеллект</title>
+    <title>MakeAI - Передовой искусственный интеллект</title>
     <link rel="icon" href="img.jpg" type="image/jpeg">
     <style>
         :root {
@@ -118,6 +118,32 @@
             cursor: pointer;
         }
         
+        .language-selector {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+        }
+        
+        .language-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #ccc;
+            padding: 8px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            margin: 0 5px;
+            transition: all 0.3s;
+        }
+        
+        .language-btn.active {
+            background: var(--gradient);
+            color: white;
+        }
+        
+        .language-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
         .btn {
             display: inline-block;
             padding: 12px 28px;
@@ -134,6 +160,100 @@
         .btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--secondary);
+        }
+        
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: #252547;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #ccc;
+        }
+        
+        .auth-form {
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .form-group input:focus {
+            outline: 2px solid var(--secondary);
+        }
+        
+        .form-footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .form-footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
         }
         
         /* Герой секция */
@@ -337,6 +457,10 @@
                 display: none;
             }
             
+            .language-selector {
+                display: none;
+            }
+            
             .hero h1 {
                 font-size: 2.5rem;
             }
@@ -358,47 +482,110 @@
                     <div class="logo">MakeAI</div>
                 </div>
                 <ul class="nav-links">
-                    <li><a href="#features">Возможности</a></li>
-                    <li><a href="#chat">Попробовать</a></li>
-                    <li><a href="#about">О технологии</a></li>
+                    <li><a href="#features" data-i18n="nav.features">Возможности</a></li>
+                    <li><a href="#chat" data-i18n="nav.try">Попробовать</a></li>
+                    <li><a href="#about" data-i18n="nav.about">О технологии</a></li>
                     <li>
                         <div class="search-container">
-                            <input type="text" placeholder="Поиск по сайту...">
+                            <input type="text" data-i18n="placeholder.search" placeholder="Поиск по сайту...">
                             <button>🔍</button>
                         </div>
                     </li>
+                    <li class="language-selector">
+                        <button class="language-btn active" data-lang="ru">RU</button>
+                        <button class="language-btn" data-lang="en">EN</button>
+                        <button class="language-btn" data-lang="de">DE</button>
+                    </li>
+                    <li id="auth-buttons">
+                        <a href="#login" class="btn btn-outline" id="login-btn" data-i18n="nav.login">Войти</a>
+                        <a href="#register" class="btn" id="register-btn" data-i18n="nav.register">Регистрация</a>
+                    </li>
+                    <li id="user-section" style="display: none;">
+                        <div class="user-info">
+                            <div class="user-avatar" id="user-avatar">U</div>
+                            <span id="username">Пользователь</span>
+                            <a href="#logout" id="logout-btn" style="margin-left: 15px;" data-i18n="nav.logout">Выйти</a>
+                        </div>
+                    </li>
                 </ul>
-                <a href="#chat" class="btn">Начать общение</a>
             </nav>
         </div>
     </header>
 
+    <!-- Модальное окно входа -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-login">&times;</span>
+            <h2 data-i18n="login.title">Вход в аккаунт</h2>
+            <div class="auth-form">
+                <div class="form-group">
+                    <label for="login-email" data-i18n="login.email">Email</label>
+                    <input type="email" id="login-email" placeholder="Введите ваш email">
+                </div>
+                <div class="form-group">
+                    <label for="login-password" data-i18n="login.password">Пароль</label>
+                    <input type="password" id="login-password" placeholder="Введите ваш пароль">
+                </div>
+                <button class="btn" id="login-submit" data-i18n="login.button">Войти</button>
+                <div class="form-footer">
+                    <p data-i18n="login.noAccount">Нет аккаунта? <a id="switch-to-register">Зарегистрироваться</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно регистрации -->
+    <div class="modal" id="register-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-register">&times;</span>
+            <h2 data-i18n="register.title">Регистрация аккаунта</h2>
+            <div class="auth-form">
+                <div class="form-group">
+                    <label for="register-name" data-i18n="register.name">Имя</label>
+                    <input type="text" id="register-name" placeholder="Введите ваше имя">
+                </div>
+                <div class="form-group">
+                    <label for="register-email" data-i18n="register.email">Email</label>
+                    <input type="email" id="register-email" placeholder="Введите ваш email">
+                </div>
+                <div class="form-group">
+                    <label for="register-password" data-i18n="register.password">Пароль</label>
+                    <input type="password" id="register-password" placeholder="Придумайте пароль">
+                </div>
+                <button class="btn" id="register-submit" data-i18n="register.button">Зарегистрироваться</button>
+                <div class="form-footer">
+                    <p data-i18n="register.hasAccount">Уже есть аккаунт? <a id="switch-to-login">Войти</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <section class="hero">
         <div class="container">
-            <h1>Собственный искусственный интеллект без API ключей</h1>
-            <p>MakeAI работает полностью в вашем браузере. Никаких внешних сервисов, никаких ключей API — только чистая нейросеть!</p>
-            <a href="#chat" class="btn">Начать общение</a>
+            <h1 data-i18n="hero.title">Передовой искусственный интеллект нового поколения</h1>
+            <p data-i18n="hero.subtitle">MakeAI использует передовые алгоритмы глубокого обучения для решения сложных задач и ответов на любые ваши вопросы.</p>
+            <a href="#chat" class="btn" id="hero-chat-btn" data-i18n="hero.button">Начать общение</a>
         </div>
     </section>
 
     <section class="features" id="features">
         <div class="container">
-            <h2 class="section-title">Что может MakeAI</h2>
+            <h2 class="section-title" data-i18n="features.title">Что может MakeAI</h2>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">🔒</div>
-                    <h3>Полная приватность</h3>
-                    <p>Все данные обрабатываются локально в вашем браузере. Никакая информация не отправляется на серверы.</p>
+                    <h3 data-i18n="features.privacy.title">Полная приватность</h3>
+                    <p data-i18n="features.privacy.text">Все данные обрабатываются локально в вашем браузере. Никакая информация не отправляется на серверы.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">⚡</div>
-                    <h3>Мгновенная работа</h3>
-                    <p>Нейросеть работает без задержек на ожидание ответов от внешних API. Все ответы генерируются мгновенно.</p>
+                    <h3 data-i18n="features.speed.title">Мгновенная работа</h3>
+                    <p data-i18n="features.speed.text">Нейросеть работает без задержек на ожидание ответов от внешних API. Все ответы генерируются мгновенно.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">💾</div>
-                    <h3>Без ограничений</h3>
-                    <p>Неограниченное количество запросов без лимитов и платных подписок. Используйте нейросеть сколько угодно!</p>
+                    <h3 data-i18n="features.limits.title">Без ограничений</h3>
+                    <p data-i18n="features.limits.text">Неограниченное количество запросов без лимитов и платных подписок. Используйте нейросеть сколько угодно!</p>
                 </div>
             </div>
         </div>
@@ -406,27 +593,27 @@
 
     <section class="chat-demo" id="chat">
         <div class="container">
-            <h2 class="section-title">Попробуйте MakeAI</h2>
-            <p>Пообщайтесь с нашей нейросетью и убедитесь в ее возможностях</p>
+            <h2 class="section-title" data-i18n="chat.title">Попробуйте MakeAI</h2>
+            <p data-i18n="chat.subtitle">Пообщайтесь с нашей нейросетью и убедитесь в ее возможностях</p>
             
             <div class="chat-container">
-                <div class="chat-header">
+                <div class="chat-header" data-i18n="chat.header">
                     Чат с MakeAI
                 </div>
                 <div class="chat-messages" id="chat-messages">
-                    <div class="message ai-message">
+                    <div class="message ai-message" data-i18n="chat.welcome">
                         Привет! Я MakeAI — нейросеть, которая работает прямо в вашем браузере. Можете спросить меня о чем угодно!
                     </div>
                 </div>
-                <div class="typing-indicator" id="typing-indicator">
+                <div class="typing-indicator" id="typing-indicator" data-i18n="chat.typing">
                     MakeAI обрабатывает запрос...
                 </div>
                 <div class="chat-input">
-                    <input type="text" id="user-input" placeholder="Введите ваше сообщение...">
-                    <button id="send-btn">Отправить</button>
+                    <input type="text" id="user-input" data-i18n="placeholder.message" placeholder="Введите ваше сообщение..." disabled>
+                    <button id="send-btn" data-i18n="button.send">Отправить</button>
                 </div>
             </div>
-            <div class="ai-status" id="ai-status">
+            <div class="ai-status" id="ai-status" data-i18n="status.active">
                 ✅ Нейросеть активна и готова к работе
             </div>
         </div>
@@ -434,22 +621,22 @@
 
     <section class="features" id="about">
         <div class="container">
-            <h2 class="section-title">Как это работает?</h2>
+            <h2 class="section-title" data-i18n="about.title">Как это работает?</h2>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">🧠</div>
-                    <h3>Нейросеть в браузере</h3>
-                    <p>Мы используем передовые технологии машинного обучения, которые работают прямо в вашем браузере без подключения к интернету.</p>
+                    <h3 data-i18n="about.browser.title">Нейросеть в браузере</h3>
+                    <p data-i18n="about.browser.text">Мы используем передовые технологии машинного обучения, которые работают прямо в вашем браузере без подключения к интернету.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🔍</div>
-                    <h3>Анализ запросов</h3>
-                    <p>Нейросеть анализирует ваш запрос, определяет его тип и генерирует наиболее подходящий ответ на основе встроенной базы знаний.</p>
+                    <h3 data-i18n="about.analysis.title">Анализ запросов</h3>
+                    <p data-i18n="about.analysis.text">Нейросеть анализирует ваш запрос, определяет его тип и генерирует наиболее подходящий ответ на основе встроенной базы знаний.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🚀</div>
-                    <h3>Быстрые ответы</h3>
-                    <p>Благодаря оптимизированным алгоритмам, нейросеть генерирует ответы мгновенно, без задержек на сетевые запросы.</p>
+                    <h3 data-i18n="about.speed.title">Быстрые ответы</h3>
+                    <p data-i18n="about.speed.text">Благодаря оптимизированным алгоритмам, нейросеть генерирует ответы мгновенно, без задержек на сетевые запросы.</p>
                 </div>
             </div>
         </div>
@@ -459,16 +646,218 @@
         <div class="container">
             <div class="logo">MakeAI</div>
             <ul class="footer-links">
-                <li><a href="#">Политика конфиденциальности</a></li>
-                <li><a href="#">Технологии</a></li>
-                <li><a href="#">Контакты</a></li>
-                <li><a href="#">Поддержка</a></li>
+                <li><a href="#" data-i18n="footer.privacy">Политика конфиденциальности</a></li>
+                <li><a href="#" data-i18n="footer.technology">Технологии</a></li>
+                <li><a href="#" data-i18n="footer.contacts">Контакты</a></li>
+                <li><a href="#" data-i18n="footer.support">Поддержка</a></li>
             </ul>
-            <p class="copyright">© 2023 MakeAI. Все права защищены. Работает полностью оффлайн.</p>
+            <p class="copyright">© 2025 MakeAI. Все права защищены. Работает полностью оффлайн.</p>
         </div>
     </footer>
 
     <script>
+        // Многоязычная поддержка
+        const translations = {
+            ru: {
+                // Навигация
+                "nav.features": "Возможности",
+                "nav.try": "Попробовать",
+                "nav.about": "О технологии",
+                "nav.login": "Войти",
+                "nav.register": "Регистрация",
+                "nav.logout": "Выйти",
+                "nav.start": "Начать общение",
+                
+                // Формы авторизации
+                "login.title": "Вход в аккаунт",
+                "login.email": "Email",
+                "login.password": "Пароль",
+                "login.button": "Войти",
+                "login.noAccount": "Нет аккаунта?",
+                
+                "register.title": "Регистрация аккаунта",
+                "register.name": "Имя",
+                "register.email": "Email",
+                "register.password": "Пароль",
+                "register.button": "Зарегистрироваться",
+                "register.hasAccount": "Уже есть аккаунт?",
+                
+                // Герой
+                "hero.title": "Передовой искусственный интеллект нового поколения",
+                "hero.subtitle": "MakeAI использует передовые алгоритмы глубокого обучения для решения сложных задач и ответов на любые ваши вопросы.",
+                "hero.button": "Начать общение",
+                
+                // Возможности
+                "features.title": "Что может MakeAI",
+                "features.privacy.title": "Полная приватность",
+                "features.privacy.text": "Все данные обрабатываются локально в вашем браузере. Никакая информация не отправляется на серверы.",
+                "features.speed.title": "Мгновенная работа",
+                "features.speed.text": "Нейросеть работает без задержек на ожидание ответов от внешних API. Все ответы генерируются мгновенно.",
+                "features.limits.title": "Без ограничений",
+                "features.limits.text": "Неограниченное количество запросов без лимитов и платных подписок. Используйте нейросеть сколько угодно!",
+                
+                // Чат
+                "chat.title": "Попробуйте MakeAI",
+                "chat.subtitle": "Пообщайтесь с нашей нейросетью и убедитесь в ее возможностях",
+                "chat.header": "Чат с MakeAI",
+                "chat.welcome": "Привет! Я MakeAI — нейросеть, которая работает прямо в вашем браузере. Можете спросить меня о чем угодно!",
+                "chat.typing": "MakeAI обрабатывает запрос...",
+                
+                // О технологии
+                "about.title": "Как это работает?",
+                "about.browser.title": "Нейросеть в браузере",
+                "about.browser.text": "Мы используем передовые технологии машинного обучения, которые работают прямо в вашем браузере без подключения к интернету.",
+                "about.analysis.title": "Анализ запросов",
+                "about.analysis.text": "Нейросеть анализирует ваш запрос, определяет его тип и генерирует наиболее подходящий ответ на основе встроенной базы знаний.",
+                "about.speed.title": "Быстрые ответы",
+                "about.speed.text": "Благодаря оптимизированным алгоритмам, нейросеть генерирует ответы мгновенно, без задержек на сетевые запросы.",
+                
+                // Футер
+                "footer.privacy": "Политика конфиденциальности",
+                "footer.technology": "Технологии",
+                "footer.contacts": "Контакты",
+                "footer.support": "Поддержка",
+                
+                // Плейсхолдеры и кнопки
+                "placeholder.search": "Поиск по сайту...",
+                "placeholder.message": "Введите ваше сообщение...",
+                "button.send": "Отправить",
+                "status.active": "✅ Нейросеть активна и готова к работе"
+            },
+            en: {
+                // Navigation
+                "nav.features": "Features",
+                "nav.try": "Try it",
+                "nav.about": "About",
+                "nav.login": "Login",
+                "nav.register": "Register",
+                "nav.logout": "Logout",
+                "nav.start": "Start Chat",
+                
+                // Auth forms
+                "login.title": "Login to account",
+                "login.email": "Email",
+                "login.password": "Password",
+                "login.button": "Login",
+                "login.noAccount": "No account?",
+                
+                "register.title": "Create account",
+                "register.name": "Name",
+                "register.email": "Email",
+                "register.password": "Password",
+                "register.button": "Register",
+                "register.hasAccount": "Already have an account?",
+                
+                // Hero
+                "hero.title": "Advanced Next-Generation Artificial Intelligence",
+                "hero.subtitle": "MakeAI uses cutting-edge deep learning algorithms to solve complex problems and answer any of your questions.",
+                "hero.button": "Start Chat",
+                
+                // Features
+                "features.title": "What MakeAI Can Do",
+                "features.privacy.title": "Complete Privacy",
+                "features.privacy.text": "All data is processed locally in your browser. No information is sent to servers.",
+                "features.speed.title": "Instant Work",
+                "features.speed.text": "The neural network works without delays waiting for responses from external APIs. All responses are generated instantly.",
+                "features.limits.title": "No Limits",
+                "features.limits.text": "Unlimited number of requests without limits and paid subscriptions. Use the neural network as much as you want!",
+                
+                // Chat
+                "chat.title": "Try MakeAI",
+                "chat.subtitle": "Chat with our neural network and see its capabilities",
+                "chat.header": "Chat with MakeAI",
+                "chat.welcome": "Hello! I'm MakeAI - a neural network that works right in your browser. You can ask me anything!",
+                "chat.typing": "MakeAI is processing the request...",
+                
+                // About
+                "about.title": "How It Works?",
+                "about.browser.title": "Neural Network in Browser",
+                "about.browser.text": "We use advanced machine learning technologies that work right in your browser without an internet connection.",
+                "about.analysis.title": "Request Analysis",
+                "about.analysis.text": "The neural network analyzes your request, determines its type and generates the most appropriate response based on the built-in knowledge base.",
+                "about.speed.title": "Fast Responses",
+                "about.speed.text": "Thanks to optimized algorithms, the neural network generates responses instantly, without network delays.",
+                
+                // Footer
+                "footer.privacy": "Privacy Policy",
+                "footer.technology": "Technologies",
+                "footer.contacts": "Contacts",
+                "footer.support": "Support",
+                
+                // Placeholders and buttons
+                "placeholder.search": "Search the site...",
+                "placeholder.message": "Enter your message...",
+                "button.send": "Send",
+                "status.active": "✅ Neural network is active and ready to work"
+            },
+            de: {
+                // Navigation
+                "nav.features": "Funktionen",
+                "nav.try": "Ausprobieren",
+                "nav.about": "Über Technologie",
+                "nav.login": "Anmelden",
+                "nav.register": "Registrieren",
+                "nav.logout": "Abmelden",
+                "nav.start": "Chat starten",
+                
+                // Auth forms
+                "login.title": "Anmeldung am Konto",
+                "login.email": "Email",
+                "login.password": "Passwort",
+                "login.button": "Anmelden",
+                "login.noAccount": "Kein Konto?",
+                
+                "register.title": "Konto erstellen",
+                "register.name": "Name",
+                "register.email": "Email",
+                "register.password": "Passwort",
+                "register.button": "Registrieren",
+                "register.hasAccount": "Bereits ein Konto?",
+                
+                // Hero
+                "hero.title": "Fortschrittliche Künstliche Intelligenz der nächsten Generation",
+                "hero.subtitle": "MakeAI verwendet modernste Deep-Learning-Algorithmen zur Lösung komplexer Probleme und Beantwortung all Ihrer Fragen.",
+                "hero.button": "Chat starten",
+                
+                // Features
+                "features.title": "Was MakeAI kann",
+                "features.privacy.title": "Volle Privatsphäre",
+                "features.privacy.text": "Alle Daten werden lokal in Ihrem Browser verarbeitet. Es werden keine Informationen an Server gesendet.",
+                "features.speed.title": "Sofortige Arbeit",
+                "features.speed.text": "Das neuronale Netzwerk arbeitet ohne Verzögerungen beim Warten auf Antworten von externen APIs. Alle Antworten werden sofort generiert.",
+                "features.limits.title": "Keine Einschränkungen",
+                "features.limits.text": "Unbegrenzte Anzahl von Anfragen ohne Limits und kostenpflichtige Abonnements. Verwenden Sie das neuronale Netzwerk so viel Sie wollen!",
+                
+                // Chat
+                "chat.title": "MakeAI ausprobieren",
+                "chat.subtitle": "Unterhalten Sie sich mit unserem neuronalen Netzwerk und überzeugen Sie sich von seinen Fähigkeiten",
+                "chat.header": "Chat mit MakeAI",
+                "chat.welcome": "Hallo! Ich bin MakeAI - ein neuronales Netzwerk, das direkt in Ihrem Browser arbeitet. Sie können mich alles fragen!",
+                "chat.typing": "MakeAI verarbeitet die Anfrage...",
+                
+                // About
+                "about.title": "Wie funktioniert es?",
+                "about.browser.title": "Neuronales Netzwerk im Browser",
+                "about.browser.text": "Wir verwenden fortschrittliche Machine-Learning-Technologien, die direkt in Ihrem Browser ohne Internetverbindung arbeiten.",
+                "about.analysis.title": "Anfragenanalyse",
+                "about.analysis.text": "Das neuronale Netzwerk analysiert Ihre Anfrage, bestimmt ihren Typ und generiert die passendste Antwort auf Basis der integrierten Wissensdatenbank.",
+                "about.speed.title": "Schnelle Antworten",
+                "about.speed.text": "Dank optimierter Algorithmen generiert das neuronale Netzwerk Antworten sofort, ohne Netzwerkverzögerungen.",
+                
+                // Footer
+                "footer.privacy": "Datenschutzrichtlinie",
+                "footer.technology": "Technologien",
+                "footer.contacts": "Kontakte",
+                "footer.support": "Support",
+                
+                // Placeholders and buttons
+                "placeholder.search": "Webseite durchsuchen...",
+                "placeholder.message": "Geben Sie Ihre Nachricht ein...",
+                "button.send": "Senden",
+                "status.active": "✅ Neuronales Netzwerk ist aktiv und bereit zu arbeiten"
+            }
+        };
+
         // Собственная нейросеть MakeAI - работает полностью в браузере
         document.addEventListener('DOMContentLoaded', function() {
             const chatMessages = document.getElementById('chat-messages');
@@ -477,89 +866,505 @@
             const typingIndicator = document.getElementById('typing-indicator');
             const searchInput = document.querySelector('.search-container input');
             const searchButton = document.querySelector('.search-container button');
+            const languageButtons = document.querySelectorAll('.language-btn');
+            const loginBtn = document.getElementById('login-btn');
+            const registerBtn = document.getElementById('register-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            const loginModal = document.getElementById('login-modal');
+            const registerModal = document.getElementById('register-modal');
+            const closeLogin = document.getElementById('close-login');
+            const closeRegister = document.getElementById('close-register');
+            const loginSubmit = document.getElementById('login-submit');
+            const registerSubmit = document.getElementById('register-submit');
+            const switchToRegister = document.getElementById('switch-to-register');
+            const switchToLogin = document.getElementById('switch-to-login');
+            const authButtons = document.getElementById('auth-buttons');
+            const userSection = document.getElementById('user-section');
+            const userAvatar = document.getElementById('user-avatar');
+            const usernameSpan = document.getElementById('username');
+            const chatSection = document.querySelector('.chat-demo');
+            const heroChatBtn = document.getElementById('hero-chat-btn');
             
-            // База знаний нейросети
+            let currentLanguage = 'ru';
+            let currentUser = null;
+            
+            // Проверяем, есть ли сохраненный пользователь
+            function checkAuth() {
+                const user = JSON.parse(localStorage.getItem('makeai_current_user') || 'null');
+                if (user) {
+                    currentUser = user;
+                    authButtons.style.display = 'none';
+                    userSection.style.display = 'flex';
+                    usernameSpan.textContent = user.name;
+                    userAvatar.textContent = user.name.charAt(0).toUpperCase();
+                    userInput.disabled = false;
+                } else {
+                    authButtons.style.display = 'flex';
+                    userSection.style.display = 'none';
+                    userInput.disabled = true;
+                }
+            }
+            
+            // Функция для перевода интерфейса
+            function translatePage(lang) {
+                currentLanguage = lang;
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (translations[lang][key]) {
+                        if (element.placeholder) {
+                            element.placeholder = translations[lang][key];
+                        } else {
+                            element.textContent = translations[lang][key];
+                        }
+                    }
+                });
+                
+                // Обновляем активную кнопку языка
+                languageButtons.forEach(btn => {
+                    if (btn.getAttribute('data-lang') === lang) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                
+                // Обновляем приветственное сообщение в чате
+                const welcomeMessage = chatMessages.querySelector('.ai-message');
+                if (welcomeMessage && welcomeMessage.getAttribute('data-i18n') === 'chat.welcome') {
+                    welcomeMessage.textContent = translations[lang]['chat.welcome'];
+                }
+            }
+            
+            // Обработчики кнопок языка
+            languageButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    translatePage(lang);
+                });
+            });
+            
+            // Обработчики модальных окон
+            loginBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                loginModal.style.display = 'flex';
+            });
+            
+            registerBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                registerModal.style.display = 'flex';
+            });
+            
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('makeai_current_user');
+                checkAuth();
+            });
+            
+            closeLogin.addEventListener('click', function() {
+                loginModal.style.display = 'none';
+            });
+            
+            closeRegister.addEventListener('click', function() {
+                registerModal.style.display = 'none';
+            });
+            
+            switchToRegister.addEventListener('click', function() {
+                loginModal.style.display = 'none';
+                registerModal.style.display = 'flex';
+            });
+            
+            switchToLogin.addEventListener('click', function() {
+                registerModal.style.display = 'none';
+                loginModal.style.display = 'flex';
+            });
+            
+            // Обработчики форм
+            loginSubmit.addEventListener('click', function() {
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                
+                if (email && password) {
+                    login(email, password);
+                } else {
+                    alert(currentLanguage === 'ru' ? 'Пожалуйста, заполните все поля' : 
+                          currentLanguage === 'en' ? 'Please fill in all fields' :
+                          'Bitte füllen Sie alle Felder aus');
+                }
+            });
+            
+            registerSubmit.addEventListener('click', function() {
+                const name = document.getElementById('register-name').value;
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                
+                if (name && email && password) {
+                    register(name, email, password);
+                } else {
+                    alert(currentLanguage === 'ru' ? 'Пожалуйста, заполните все поля' : 
+                          currentLanguage === 'en' ? 'Please fill in all fields' :
+                          'Bitte füllen Sie alle Felder aus');
+                }
+            });
+            
+            // Функции аутентификации
+            function login(email, password) {
+                const users = JSON.parse(localStorage.getItem('makeai_users') || '{}');
+                
+                if (users[email] && users[email].password === password) {
+                    const user = users[email];
+                    localStorage.setItem('makeai_current_user', JSON.stringify({
+                        name: user.name,
+                        email: email
+                    }));
+                    
+                    checkAuth();
+                    loginModal.style.display = 'none';
+                    
+                    alert(currentLanguage === 'ru' ? 'Вход выполнен успешно!' : 
+                          currentLanguage === 'en' ? 'Login successful!' :
+                          'Anmeldung erfolgreich!');
+                } else {
+                    alert(currentLanguage === 'ru' ? 'Неверный email или пароль' : 
+                          currentLanguage === 'en' ? 'Invalid email or password' :
+                          'Ungültige E-Mail oder Passwort');
+                }
+            }
+            
+            function register(name, email, password) {
+                const users = JSON.parse(localStorage.getItem('makeai_users') || '{}');
+                
+                if (users[email]) {
+                    alert(currentLanguage === 'ru' ? 'Пользователь с таким email уже существует' : 
+                          currentLanguage === 'en' ? 'User with this email already exists' :
+                          'Benutzer mit dieser E-Mail existiert bereits');
+                    return;
+                }
+                
+                users[email] = {
+                    name: name,
+                    password: password,
+                    createdAt: new Date().toISOString()
+                };
+                
+                localStorage.setItem('makeai_users', JSON.stringify(users));
+                localStorage.setItem('makeai_current_user', JSON.stringify({
+                    name: name,
+                    email: email
+                }));
+                
+                checkAuth();
+                registerModal.style.display = 'none';
+                
+                alert(currentLanguage === 'ru' ? 'Регистрация выполнена успешно!' : 
+                      currentLanguage === 'en' ? 'Registration successful!' :
+                      'Registrierung erfolgreich!');
+            }
+            
+            // База знаний нейросети на разных языках
             const knowledgeBase = {
-                greetings: [
-                    "Привет! Как я могу помочь вам сегодня?",
-                    "Здравствуйте! Рад вас видеть. Чем могу помочь?",
-                    "Приветствую! Что бы вы хотели обсудить?",
-                    "Добрый день! Чем могу быть полезен?"
-                ],
-                
-                farewells: [
-                    "До свидания! Было приятно пообщаться.",
-                    "Всего хорошего! Возвращайтесь, если появятся вопросы.",
-                    "Пока! Не стесняйтесь обращаться снова.",
-                    "До встречи! Буду рад помочь вам снова."
-                ],
-                
-                thanks: [
-                    "Пожалуйста! Всегда рад помочь.",
-                    "Обращайтесь! Буду рад помочь снова.",
-                    "Не за что! Если будут еще вопросы - я здесь.",
-                    "Рад был помочь! Что-то еще интересует?"
-                ],
-                
-                stories: {
-                    space: "В далекой галактике, среди миллиардов звезд, находилась маленькая планета под названием Ксилоф. Ее жители, кристаллические существа, жили в гармонии с энергией вселенной. Однажды молодой исследователь по имени Зорб обнаружил древний артефакт, который мог изменить судьбу всей цивилизации.",
+                ru: {
+                    greetings: [
+                        "Привет! Как я могу помочь вам сегодня?",
+                        "Здравствуйте! Рад вас видеть. Чем могу помочь?",
+                        "Приветствую! Что бы вы хотели обсудить?",
+                        "Добрый день! Чем могу быть полезен?"
+                    ],
                     
-                    fantasy: "В волшебном лесу, где деревья шептали древние заклинания, жил маленький эльф по имени Элриан. Он обладал уникальным даром — понимать язык животных. Однажды ему доверили миссию спасти лес от надвигающейся тьмы.",
+                    farewells: [
+                        "До свидания! Было приятно пообщаться.",
+                        "Всего хорошего! Возвращайтесь, если появятся вопросы.",
+                        "Пока! Не стесняйтесь обращаться снова.",
+                        "До встречи! Буду рад помочь вам снова."
+                    ],
                     
-                    scifi: "В 2150 году человечество освоило межзвездные путешествия. Доктор Ария Шен открыла способ коммуникации с инопланетными цивилизациями через музыкальные частоты. Ее открытие изменило представление о вселенной навсегда."
+                    thanks: [
+                        "Пожалуйста! Всегда рад помочь.",
+                        "Обращайтесь! Буду рад помочь снова.",
+                        "Не за что! Если будут еще вопросы - я здесь.",
+                        "Рад был помочь! Что-то еще интересует?"
+                    ],
+                    
+                    stories: {
+                        space: "В далекой галактике, среди миллиардов звезд, находилась маленькая планета под названием Ксилоф. Ее жители, кристаллические существа, жили в гармонии с энергией вселенной. Однажды молодой исследователь по имени Зорб обнаружил древний артефакт, который мог изменить судьбу всей цивилизации.",
+                        
+                        fantasy: "В волшебном лесу, где деревья шептали древние заклинания, жил маленький эльф по имени Элриан. Он обладал уникальным даром — понимать язык животных. Однажды ему доверили миссию спасти лес от надвигающейся тьмы.",
+                        
+                        scifi: "В 2150 году человечество освоило межзвездные путешествия. Доктор Ария Шен открыла способ коммуникации с инопланетными цивилизациями через музыкальные частоты. Ее открытие изменило представление о вселенной навсегда."
+                    },
+                    
+                    poems: {
+                        ai: "Искусственный разум, ты чудо из кода,\nТвои нейроны сплетаются в сети народа.\nТы мыслишь, творишь, помогаешь нам жить,\nИ новые горизонты стремишься открыть.",
+                        
+                        nature: "Ветер шепчет сквозь листву,\nРечка тихо льет слезу.\nСолнце красит небосвод,\nВ мир волшебный нас ведет.",
+                        
+                        love: "Сердца стук, как тихий звук,\nВ нем любви живет недуг.\nВзгляд твой ясен и глубок,\nВ нем исчезнуть я бы смог."
+                    },
+                    
+                    advice: [
+                        "Попробуйте разбить задачу на smaller steps — так будет проще с ней справиться.",
+                        "Иногда лучший способ решить проблему — сделать перерыв и вернуться к ней со свежей головой.",
+                        "Не бойтесь экспериментировать и пробовать новые подходы — именно так рождаются инновации."
+                    ],
+                    
+                    facts: {
+                        tech: "Знаете ли вы, что первый программируемый компьютер был создан в 1940-х годах и занимал целую комнату?",
+                        science: "Человеческий мозг способен хранить около 2.5 петабайт информации — это примерно 3 миллиона часов телепередач!",
+                        nature: "Деревья общаются друг с другом через подземную сеть грибов, которую ученые называют 'Wood Wide Web'."
+                    },
+                    
+                    routes: {
+                        "тутаев восточный вокзал москва": "Из Тутаева до Восточного вокзала в Москве можно добраться следующим образом:\n\n1. Сначала доехайте из Тутаева до Ярославля (около 40 км).\n2. С ярославского автовокзала или ж/д вокзала можно добраться до Москвы.\n3. Из Москвы (Ярославский вокзал) на метро до станции 'Электрозаводская', затем пешком или на автобусе до Восточного вокзала.\n\nОбщее время в пути составит примерно 5-6 часов."
+                    }
                 },
-                
-                poems: {
-                    ai: "Искусственный разум, ты чудо из кода,\nТвои нейроны сплетаются в сети народа.\nТы мыслишь, творишь, помогаешь нам жить,\nИ новые горизонты стремишься открыть.",
+                en: {
+                    greetings: [
+                        "Hello! How can I help you today?",
+                        "Hi! Nice to see you. How can I assist?",
+                        "Welcome! What would you like to discuss?",
+                        "Good day! How can I be of service?"
+                    ],
                     
-                    nature: "Ветер шепчет сквозь листву,\nРечка тихо льет слезу.\nСолнце красит небосвод,\nВ мир волшебный нас ведет.",
+                    farewells: [
+                        "Goodbye! It was nice talking to you.",
+                        "All the best! Come back if you have questions.",
+                        "Bye! Don't hesitate to contact us again.",
+                        "See you! I'll be glad to help you again."
+                    ],
                     
-                    love: "Сердца стук, как тихий звук,\nВ нем любви живет недуг.\nВзгляд твой ясен и глубок,\nВ нем исчезнуть я бы смог."
+                    thanks: [
+                        "You're welcome! Always happy to help.",
+                        "Contact me! I'll be happy to help again.",
+                        "Not at all! If there are more questions - I'm here.",
+                        "Glad to help! Anything else interest you?"
+                    ],
+                    
+                    stories: {
+                        space: "In a distant galaxy, among billions of stars, there was a small planet called Xyloph. Its inhabitants, crystalline beings, lived in harmony with the energy of the universe. One day, a young researcher named Zorb discovered an ancient artifact that could change the fate of an entire civilization.",
+                        
+                        fantasy: "In a magical forest where trees whispered ancient spells, lived a little elf named Elrian. He had a unique gift - to understand the language of animals. One day he was entrusted with a mission to save the forest from the approaching darkness.",
+                        
+                        scifi: "In 2150, humanity mastered interstellar travel. Dr. Aria Shen discovered a way to communicate with alien civilizations through musical frequencies. Her discovery changed the understanding of the universe forever."
+                    },
+                    
+                    poems: {
+                        ai: "Artificial intelligence, you are a miracle of code,\nYour neurons weave into the networks of the people.\nYou think, create, help us live,\nAnd strive to open new horizons.",
+                        
+                        nature: "The wind whispers through the foliage,\nThe river quietly sheds a tear.\nThe sun paints the sky,\nLeads us into a magical world.",
+                        
+                        love: "The beat of the heart, like a quiet sound,\nIn it lives the ailment of love.\nYour gaze is clear and deep,\nIn it I could disappear."
+                    },
+                    
+                    advice: [
+                        "Try breaking the task into smaller steps - it will be easier to deal with.",
+                        "Sometimes the best way to solve a problem is to take a break and come back to it with a fresh head.",
+                        "Don't be afraid to experiment and try new approaches - this is how innovations are born."
+                    ],
+                    
+                    facts: {
+                        tech: "Did you know that the first programmable computer was created in the 1940s and took up an entire room?",
+                        science: "The human brain can store about 2.5 petabytes of information - that's about 3 million hours of TV shows!",
+                        nature: "Trees communicate with each other through an underground network of fungi that scientists call the 'Wood Wide Web'."
+                    },
+                    
+                    routes: {
+                        "tutaev east station moscow": "From Tutaev to East Station in Moscow you can get as follows:\n\n1. First, get from Tutaev to Yaroslavl (about 40 km).\n2. From Yaroslavl bus station or railway station you can get to Moscow.\n3. From Moscow (Yaroslavsky Station) by metro to Elektrozavodskaya station, then on foot or by bus to East Station.\n\nTotal travel time will be approximately 5-6 hours."
+                    }
                 },
-                
-                advice: [
-                    "Попробуйте разбить задачу на smaller steps — так будет проще с ней справиться.",
-                    "Иногда лучший способ решить проблему — сделать перерыв и вернуться к ней со свежей головой.",
-                    "Не бойтесь экспериментировать и пробовать новые подходы — именно так рождаются инновации."
-                ],
-                
-                facts: {
-                    tech: "Знаете ли вы, что первый программируемый компьютер был создан в 1940-х годах и занимал целую комнату?",
-                    science: "Человеческий мозг способен хранить около 2.5 петабайт информации — это примерно 3 миллиона часов телепередач!",
-                    nature: "Деревья общаются друг с другом через подземную сеть грибов, которую ученые называют 'Wood Wide Web'."
+                de: {
+                    greetings: [
+                        "Hallo! Wie kann ich Ihnen heute helfen?",
+                        "Guten Tag! Schön, Sie zu sehen. Womit kann ich helfen?",
+                        "Willkommen! Worüber möchten Sie sprechen?",
+                        "Guten Tag! Wie kann ich Ihnen behilflich sein?"
+                    ],
+                    
+                    farewells: [
+                        "Auf Wiedersehen! Es war schön, mit Ihnen zu sprechen.",
+                        "Alles Gute! Kommen Sie wieder, wenn Sie Fragen haben.",
+                        "Tschüss! Zögern Sie nicht, uns wieder zu kontaktieren.",
+                        "Bis bald! Ich werde Ihnen gerne wieder helfen."
+                    ],
+                    
+                    thanks: [
+                        "Bitte! Immer gerne helfend.",
+                        "Kontaktieren Sie mich! Ich helfe gerne wieder.",
+                        "Gern geschehen! Wenn es weitere Fragen gibt - ich bin hier.",
+                        "Freut mich zu helfen! Interessiert Sie noch etwas?"
+                    ],
+                    
+                    stories: {
+                        space: "In einer fernen Galaxie, unter Milliarden von Sternen, gab es einen kleinen Planeten namens Xyloph. Seine Bewohner, kristalline Wesen, lebten in Harmonie mit der Energie des Universums. Eines Tages entdeckte ein junger Forscher namens Zorb ein uraltes Artefakt, das das Schicksal einer ganzen Zivilisation verändern konnte.",
+                        
+                        fantasy: "In einem magischen Wald, in dem Bäume alte Zaubersprüche flüsterten, lebte ein kleiner Elf namens Elrian. Er hatte eine einzigartige Gabe - die Sprache der Tiere zu verstehen. Eines Tages wurde ihm die Mission anvertraut, den Wald vor der hereinbrechenden Dunkelheit zu retten.",
+                        
+                        scifi: "Im Jahr 2150 beherrschte die Menschheit interstellare Reisen. Dr. Aria Shen entdeckte eine Möglichkeit, mit außerirdischen Zivilisationen durch musikalische Frequenzen zu kommunizieren. Ihre Entdeckung veränderte das Verständnis des Universums für immer."
+                    },
+                    
+                    poems: {
+                        ai: "Künstliche Intelligenz, du bist ein Wunder des Codes,\nDeine Neuronen weben sich in die Netzwerke des Volkes.\nDu denkst, erschaffst, hilfst uns leben,\nUnd strebst danach, neue Horizonte zu öffnen.",
+                        
+                        nature: "Der Wind flüstert durch das Laub,\nDer Fluss vergießt leise eine Träne.\nDie Sonne malt den Himmel,\nFührt uns in eine magische Welt.",
+                        
+                        love: "Der Herzschlag, wie ein leises Geräusch,\nIn ihm lebt das Übel der Liebe.\nDein Blick ist klar und tief,\nIn ihm könnte ich verschwinden."
+                    },
+                    
+                    advice: [
+                        "Versuchen Sie, die Aufgabe in kleinere Schritte zu zerlegen - so wird es einfacher, damit umzugehen.",
+                        "Manchmal ist der beste Weg, ein Problem zu lösen, eine Pause einzulegen und mit frischem Kopf darauf zurückzukommen.",
+                        "Haben Sie keine Angst zu experimentieren und neue Ansätze auszuprobieren - so entstehen Innovationen."
+                    ],
+                    
+                    facts: {
+                        tech: "Wussten Sie, dass der erste programmierbare Computer in den 1940er Jahren erstellt wurde und einen ganzen Raum einnahm?",
+                        science: "Das menschliche Gehirn kann etwa 2,5 Petabyte Informationen speichern - das sind etwa 3 Millionen Stunden Fernsehsendungen!",
+                        nature: "Bäume kommunizieren miteinander durch ein unterirdisches Netzwerk von Pilzen, das Wissenschaftler als 'Wood Wide Web' bezeichnen."
+                    },
+                    
+                    routes: {
+                        "tutaev ostbahnhof moskau": "Von Tutaev zum Ostbahnhof in Moskau können Sie wie folgt gelangen:\n\n1. Zuerst von Tutaev nach Jaroslawl (etwa 40 km).\n2. Vom Jaroslawler Busbahnhof oder Bahnhof können Sie nach Moskau gelangen.\n3. Von Moskau (Jaroslawler Bahnhof) mit der U-Bahn zur Station Elektrosawodskaja, dann zu Fuß oder mit dem Bus zum Ostbahnhof.\n\nDie gesamte Reisezeit beträgt etwa 5-6 Stunden."
+                    }
                 }
             };
             
-            // Обработчик поиска
-            searchButton.addEventListener('click', function() {
-                const query = searchInput.value.trim();
-                if (query) {
-                    // Переходим к чату и отправляем поисковый запрос
-                    document.querySelector('.chat-demo').style.display = 'block';
-                    window.scrollTo(0, document.querySelector('.chat-demo').offsetTop);
+            // Функция для генерации ответа нейросети
+            function generateAIResponse(userMessage) {
+                const lowerMessage = userMessage.toLowerCase();
+                const langKnowledge = knowledgeBase[currentLanguage];
+                
+                // Поиск маршрутов
+                if (/(тутаев|tutaev).*(москв|moscow|moskau).*(восточ|east|ost)/.test(lowerMessage) || 
+                    /(маршрут|route|weg|как.*доехать|how.*to.*get|wie.*komme)/.test(lowerMessage)) {
                     
-                    // Добавляем поисковый запрос в чат
-                    addUserMessage(query);
+                    for (const key in langKnowledge.routes) {
+                        if (lowerMessage.includes(key)) {
+                            return langKnowledge.routes[key];
+                        }
+                    }
                     
-                    // Показываем индикатор набора сообщения
-                    typingIndicator.classList.add('active');
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                    
-                    // Генерируем ответ на поисковый запрос
-                    setTimeout(() => {
-                        typingIndicator.classList.remove('active');
-                        const response = generateSearchResponse(query);
-                        addAIMessage(response);
-                    }, 1000 + Math.random() * 1000);
+                    return currentLanguage === 'ru' ? 
+                        "Для построения маршрута укажите пункт отправления и назначения более конкретно. Например: 'Как доехать из Тутаева до Восточного вокзала Москвы?'" :
+                        currentLanguage === 'en' ? 
+                        "To build a route, specify the departure and destination points more specifically. For example: 'How to get from Tutaev to East Station in Moscow?'" :
+                        "Um eine Route zu erstellen, geben Sie den Abfahrts- und Zielort genauer an. Zum Beispiel: 'Wie komme ich von Tutaev zum Ostbahnhof in Moskau?'";
                 }
-            });
-            
-            // Поиск по нажатию Enter
-            searchInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    searchButton.click();
+                
+                // Приветствия
+                if (/(привет|здравств|hello|hi|hallo|guten|добрый|доброе)/.test(lowerMessage)) {
+                    return langKnowledge.greetings[Math.floor(Math.random() * langKnowledge.greetings.length)];
                 }
-            });
+                
+                // Прощания
+                if (/(пока|до свидан|прощай|bye|goodbye|auf wiedersehen|tschüss)/.test(lowerMessage)) {
+                    return langKnowledge.farewells[Math.floor(Math.random() * langKnowledge.farewells.length)];
+                }
+                
+                // Благодарности
+                if (/(спас|благодар|thank|thanks|danke)/.test(lowerMessage)) {
+                    return langKnowledge.thanks[Math.floor(Math.random() * langKnowledge.thanks.length)];
+                }
+                
+                // Рассказы
+                if (/(рассказ|истори|story|tale|geschichte)/.test(lowerMessage)) {
+                    if (/(космос|галактик|планет|space|weltraum)/.test(lowerMessage)) {
+                        return langKnowledge.stories.space;
+                    } else if (/(фэнтези|волшеб|эльф|magic|fantasy|magie)/.test(lowerMessage)) {
+                        return langKnowledge.stories.fantasy;
+                    } else if (/(науч|фантастик|будущ|sci-fi|zukunft)/.test(lowerMessage)) {
+                        return langKnowledge.stories.scifi;
+                    } else {
+                        const stories = Object.values(langKnowledge.stories);
+                        return stories[Math.floor(Math.random() * stories.length)];
+                    }
+                }
+                
+                // Стихи
+                if (/(стих|поэ|poem|verse|рифм|gedicht)/.test(lowerMessage)) {
+                    if (/(ии|нейросет|ai|технолог|ki)/.test(lowerMessage)) {
+                        return langKnowledge.poems.ai;
+                    } else if (/(природ|дерев|лес|nature|natur|wald)/.test(lowerMessage)) {
+                        return langKnowledge.poems.nature;
+                    } else if (/(любов|сердц|love|heart|liebe|herz)/.test(lowerMessage)) {
+                        return langKnowledge.poems.love;
+                    } else {
+                        const poems = Object.values(langKnowledge.poems);
+                        return poems[Math.floor(Math.random() * poems.length)];
+                    }
+                }
+                
+                // Советы
+                if (/(совет|посовет|помоги|help|advice|hilf|rat)/.test(lowerMessage)) {
+                    return langKnowledge.advice[Math.floor(Math.random() * langKnowledge.advice.length)];
+                }
+                
+                // Факты
+                if (/(факт|интересн|знаешь|fact|interesting|wissen|interessant)/.test(lowerMessage)) {
+                    const facts = Object.values(langKnowledge.facts);
+                    return facts[Math.floor(Math.random() * facts.length)];
+                }
+                
+                // Вопросы о возможностях
+                if (/(что ты умеешь|возможност|функци|can you|was kannst|fähig)/.test(lowerMessage)) {
+                    return currentLanguage === 'ru' ? 
+                        "Я могу:\n- Генерировать тексты и рассказы\n- Сочинять стихи и поэзию\n- Давать советы и рекомендации\n- Рассказывать интересные факты\n- Помогать с построением маршрутов\n- Общаться на различные темы\n\nЧто вас интересует?" :
+                        currentLanguage === 'en' ? 
+                        "I can:\n- Generate texts and stories\n- Compose poems and poetry\n- Give advice and recommendations\n- Tell interesting facts\n- Help with building routes\n- Communicate on various topics\n\nWhat are you interested in?" :
+                        "Ich kann:\n- Texte und Geschichten generieren\n- Gedichte und Poesie komponieren\n- Ratschläge und Empfehlungen geben\n- Interessante Fakten erzählen\n- Beim Erstellen von Routen helfen\n- Zu verschiedenen Themen kommunizieren\n\nWas interessiert Sie?";
+                }
+                
+                // Вопросы о создателе
+                if (/(кто теб|создал|разраб|who made|wer hat|entwickler)/.test(lowerMessage)) {
+                    return currentLanguage === 'ru' ? 
+                        "Меня создала команда MakeAI как демонстрацию возможностей локальных нейросетей, работающих прямо в браузере без подключения к интернету!" :
+                        currentLanguage === 'en' ? 
+                        "I was created by the MakeAI team as a demonstration of the capabilities of local neural networks that work right in the browser without an Internet connection!" :
+                        "Ich wurde vom MakeAI-Team als Demonstration der Fähigkeiten lokaler neuronaler Netzwerke erstellt, die direkt im Browser ohne Internetverbindung arbeiten!";
+                }
+                
+                // Случайные вопросы
+                if (/\?$/.test(userMessage)) {
+                    const randomAnswers = currentLanguage === 'ru' ? [
+                        "Интересный вопрос! На основе моих знаний, я могу сказать, что ответ зависит от многих факторов.",
+                        "Хороший вопрос! Если говорить кратко, то есть несколько подходов к решению этой задачи.",
+                        "Сложный вопрос! Давайте рассмотрим его с разных сторон для лучшего понимания.",
+                        "Увлекательный вопрос! Я могу предложить несколько идей по этой теме."
+                    ] : currentLanguage === 'en' ? [
+                        "Interesting question! Based on my knowledge, I can say that the answer depends on many factors.",
+                        "Good question! Briefly speaking, there are several approaches to solving this problem.",
+                        "Difficult question! Let's look at it from different angles for a better understanding.",
+                        "Fascinating question! I can suggest several ideas on this topic."
+                    ] : [
+                        "Interessante Frage! Basierend auf meinem Wissen kann ich sagen, dass die Antwort von vielen Faktoren abhängt.",
+                        "Gute Frage! Kurz gesagt, es gibt mehrere Ansätze zur Lösung dieses Problems.",
+                        "Schwierige Frage! Betrachten wir es aus verschiedenen Blickwinkeln für ein besseres Verständnis.",
+                        "Faszinierende Frage! Ich kann mehrere Ideen zu diesem Thema vorschlagen."
+                    ];
+                    
+                    return randomAnswers[Math.floor(Math.random() * randomAnswers.length)];
+                }
+                
+                // Ответ по умолчанию
+                const defaultAnswers = currentLanguage === 'ru' ? [
+                    "Интересно! Можете рассказать подробнее?",
+                    "Понятно. Что именно вас интересует в этой теме?",
+                    "Спасибо за информацию! Как я могу помочь с этим?",
+                    "Я понял ваш запрос. Хотите, чтобы я помог с решением или генерацией идей?",
+                    "Благодарю за обращение! Чем конкретно я могу быть полезен?"
+                ] : currentLanguage === 'en' ? [
+                    "Interesting! Can you tell me more?",
+                    "Understand. What exactly interests you in this topic?",
+                    "Thank you for the information! How can I help with this?",
+                    "I understand your request. Do you want me to help with a solution or generate ideas?",
+                    "Thank you for your inquiry! How exactly can I be useful?"
+                ] : [
+                    "Interessant! Können Sie mehr erzählen?",
+                    "Verstanden. Was genau interessiert Sie an diesem Thema?",
+                    "Danke für die Information! Wie kann ich dabei helfen?",
+                    "Ich verstehe Ihre Anfrage. Möchten Sie, dass ich bei einer Lösung helfe oder Ideen generiere?",
+                    "Vielen Dank für Ihre Anfrage! Wie genau kann ich nützlich sein?"
+                ];
+                
+                return defaultAnswers[Math.floor(Math.random() * defaultAnswers.length)];
+            }
             
             // Функция добавления сообщения пользователя
             function addUserMessage(message) {
@@ -577,118 +1382,6 @@
                 messageElement.innerHTML = message.replace(/\n/g, '<br>');
                 chatMessages.appendChild(messageElement);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-            
-            // Функция для генерации ответа на поисковый запрос
-            function generateSearchResponse(query) {
-                const lowerQuery = query.toLowerCase();
-                
-                // Поиск по конкретным темам
-                if (/(нейросет|ии|ai|искусственн)/.test(lowerQuery)) {
-                    return "Нейросети — это компьютерные системы, modeled по принципу работы человеческого мозга. Они способны обучаться на данных и выполнять сложные задачи, такие как распознавание образов, генерация текста и многое другое.";
-                }
-                
-                if (/(машинн|обучен|ml)/.test(lowerQuery)) {
-                    return "Машинное обучение — это подраздел искусственного интеллекта, который focuses на разработке алгоритмов, способных обучаться на данных и делать predictions или decisions без явного программирования.";
-                }
-                
-                if (/(программир|код|разраб)/.test(lowerQuery)) {
-                    return "Программирование — это процесс создания компьютерных программ с использованием языков программирования. Популярные языки включают Python, JavaScript, Java, C++ и многие другие.";
-                }
-                
-                // Общий поисковый ответ
-                return `По вашему запросу "${query}" я нашел следующую информацию:\n\nЭто интересная тема! В контексте искусственного интеллекта, ${query} относится к области компьютерных наук, которая focuses на создании систем, способных выполнять задачи, требующие человеческого интеллекта. Хотите узнать больше конкретно о каком-то аспекте?`;
-            }
-            
-            // Функция для генерации ответа нейросети
-            function generateAIResponse(userMessage) {
-                const lowerMessage = userMessage.toLowerCase();
-                
-                // Приветствия
-                if (/(привет|здравств|hello|hi|добрый|доброе)/.test(lowerMessage)) {
-                    return knowledgeBase.greetings[Math.floor(Math.random() * knowledgeBase.greetings.length)];
-                }
-                
-                // Прощания
-                if (/(пока|до свидан|прощай|bye|goodbye)/.test(lowerMessage)) {
-                    return knowledgeBase.farewells[Math.floor(Math.random() * knowledgeBase.farewells.length)];
-                }
-                
-                // Благодарности
-                if (/(спас|благодар|thank|thanks)/.test(lowerMessage)) {
-                    return knowledgeBase.thanks[Math.floor(Math.random() * knowledgeBase.thanks.length)];
-                }
-                
-                // Рассказы
-                if (/(рассказ|истори|story|tale)/.test(lowerMessage)) {
-                    if (/(космос|галактик|планет|space)/.test(lowerMessage)) {
-                        return knowledgeBase.stories.space;
-                    } else if (/(фэнтези|волшеб|эльф|magic)/.test(lowerMessage)) {
-                        return knowledgeBase.stories.fantasy;
-                    } else if (/(науч|фантастик|будущ|sci-fi)/.test(lowerMessage)) {
-                        return knowledgeBase.stories.scifi;
-                    } else {
-                        const stories = Object.values(knowledgeBase.stories);
-                        return stories[Math.floor(Math.random() * stories.length)];
-                    }
-                }
-                
-                // Стихи
-                if (/(стих|поэ|poem|verse|рифм)/.test(lowerMessage)) {
-                    if (/(ии|нейросет|ai|технолог)/.test(lowerMessage)) {
-                        return knowledgeBase.poems.ai;
-                    } else if (/(природ|дерев|лес|nature)/.test(lowerMessage)) {
-                        return knowledgeBase.poems.nature;
-                    } else if (/(любов|сердц|love|heart)/.test(lowerMessage)) {
-                        return knowledgeBase.poems.love;
-                    } else {
-                        const poems = Object.values(knowledgeBase.poems);
-                        return poems[Math.floor(Math.random() * poems.length)];
-                    }
-                }
-                
-                // Советы
-                if (/(совет|посовет|помоги|help|advice)/.test(lowerMessage)) {
-                    return knowledgeBase.advice[Math.floor(Math.random() * knowledgeBase.advice.length)];
-                }
-                
-                // Факты
-                if (/(факт|интересн|знаешь|fact|interesting)/.test(lowerMessage)) {
-                    const facts = Object.values(knowledgeBase.facts);
-                    return facts[Math.floor(Math.random() * facts.length)];
-                }
-                
-                // Вопросы о возможностях
-                if (/(что ты умееш|возможност|функци|can you)/.test(lowerMessage)) {
-                    return "Я могу:\n- Генерировать тексты и рассказы\n- Сочинять стихи и поэзию\n- Давать советы и рекомендации\n- Рассказывать интересные факта\n- Общаться на различные темы\n\nЧто вас интересует?";
-                }
-                
-                // Вопросы о создателе
-                if (/(кто теб|создал|разраб|who made)/.test(lowerMessage)) {
-                    return "Меня создала команда MakeAI как демонстрацию возможностей локальных нейросетей, работающих прямо в браузере без подключения к интернету!";
-                }
-                
-                // Случайные вопросы
-                if (/\?$/.test(userMessage)) {
-                    const randomAnswers = [
-                        "Интересный вопрос! На основе моих знаний, я могу сказать, что ответ зависит от многих факторов.",
-                        "Хороший вопрос! Если говорить кратко, то есть несколько подходов к решению этой задачи.",
-                        "Сложный вопрос! Давайте рассмотрим его с разных сторон для лучшего понимания.",
-                        "Увлекательный вопрос! Я могу предложить несколько идей по этой теме."
-                    ];
-                    return randomAnswers[Math.floor(Math.random() * randomAnswers.length)];
-                }
-                
-                // Ответ по умолчанию
-                const defaultAnswers = [
-                    "Интересно! Можете рассказать подробнее?",
-                    "Понятно. Что именно вас интересует в этой теме?",
-                    "Спасибо за информацию! Как я могу помочь с этим?",
-                    "Я понял ваш запрос. Хотите, чтобы я помог с решением или генерацией идей?",
-                    "Благодарю за обращение! Чем конкретно я могу быть полезен?"
-                ];
-                
-                return defaultAnswers[Math.floor(Math.random() * defaultAnswers.length)];
             }
             
             // Обработчик отправки сообщения
@@ -721,8 +1414,52 @@
                 }
             });
             
-            // Фокус на поле ввода
-            userInput.focus();
+            // Обработчик поиска
+            searchButton.addEventListener('click', function() {
+                const query = searchInput.value.trim();
+                if (query) {
+                    // Переходим к чату и отправляем поисковый запрос
+                    chatSection.style.display = 'block';
+                    window.scrollTo(0, chatSection.offsetTop);
+                    
+                    // Добавляем поисковый запрос в чат
+                    addUserMessage(query);
+                    
+                    // Показываем индикатор набора сообщения
+                    typingIndicator.classList.add('active');
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    
+                    // Генерируем ответ на поисковый запрос
+                    setTimeout(() => {
+                        typingIndicator.classList.remove('active');
+                        const response = generateAIResponse(query);
+                        addAIMessage(response);
+                    }, 1000 + Math.random() * 1000);
+                }
+            });
+            
+            // Поиск по нажатию Enter
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchButton.click();
+                }
+            });
+            
+            // Переход к чату при нажатии на кнопку в герое
+            heroChatBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                chatSection.style.display = 'block';
+                window.scrollTo(0, chatSection.offsetTop);
+            });
+            
+            // Инициализация
+            checkAuth();
+            translatePage('ru');
+            
+            // Фокус на поле ввода, если пользователь авторизован
+            if (currentUser) {
+                userInput.disabled = false;
+            }
         });
     </script>
 </body>
