@@ -187,7 +187,7 @@
             padding: 30px;
             border-radius: 15px;
             width: 90%;
-            max-width: 400px;
+            max-width: 500px;
             position: relative;
         }
         
@@ -319,6 +319,51 @@
             font-size: 1.5rem;
         }
         
+        /* Генерация изображений */
+        .image-generation {
+            padding: 80px 0;
+            background-color: #252547;
+            text-align: center;
+        }
+        
+        .image-generator {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+        }
+        
+        .image-preview {
+            width: 100%;
+            height: 300px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .image-preview canvas {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+        }
+        
+        .generation-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
         /* Чат */
         .chat-demo {
             padding: 100px 0;
@@ -368,6 +413,12 @@
             align-self: flex-start;
             background: rgba(255, 255, 255, 0.1);
             border-bottom-left-radius: 5px;
+        }
+        
+        .message-image {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
         }
         
         .chat-input {
@@ -468,6 +519,10 @@
             .message {
                 max-width: 85%;
             }
+            
+            .image-preview {
+                height: 200px;
+            }
         }
     </style>
 </head>
@@ -483,6 +538,7 @@
                 </div>
                 <ul class="nav-links">
                     <li><a href="#features" data-i18n="nav.features">Возможности</a></li>
+                    <li><a href="#image-generation" data-i18n="nav.images">Генерация изображений</a></li>
                     <li><a href="#chat" data-i18n="nav.try">Попробовать</a></li>
                     <li><a href="#about" data-i18n="nav.about">О технологии</a></li>
                     <li>
@@ -563,7 +619,7 @@
     <section class="hero">
         <div class="container">
             <h1 data-i18n="hero.title">Передовой искусственный интеллект нового поколения</h1>
-            <p data-i18n="hero.subtitle">MakeAI использует передовые алгоритмы глубокого обучения для решения сложных задач и ответов на любые ваши вопросы.</p>
+            <p data-i18n="hero.subtitle">MakeAI использует передовые алгоритмы глубокого обучения для решения сложных задач, генерации изображений и ответов на любые ваши вопросы.</p>
             <a href="#chat" class="btn" id="hero-chat-btn" data-i18n="hero.button">Начать общение</a>
         </div>
     </section>
@@ -578,14 +634,39 @@
                     <p data-i18n="features.privacy.text">Все данные обрабатываются локально в вашем браузере. Никакая информация не отправляется на серверы.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3 data-i18n="features.speed.title">Мгновенная работа</h3>
-                    <p data-i18n="features.speed.text">Нейросеть работает без задержек на ожидание ответов от внешних API. Все ответы генерируются мгновенно.</p>
+                    <div class="feature-icon">🖼️</div>
+                    <h3 data-i18n="features.images.title">Генерация изображений</h3>
+                    <p data-i18n="features.images.text">Создавайте уникальные изображения по текстовому описанию с помощью нашей нейросети.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">💾</div>
                     <h3 data-i18n="features.limits.title">Без ограничений</h3>
                     <p data-i18n="features.limits.text">Неограниченное количество запросов без лимитов и платных подписок. Используйте нейросеть сколько угодно!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="image-generation" id="image-generation">
+        <div class="container">
+            <h2 class="section-title" data-i18n="images.title">Генерация изображений</h2>
+            <p data-i18n="images.subtitle">Создавайте уникальные изображения по текстовому описанию</p>
+            
+            <div class="image-generator">
+                <div class="form-group">
+                    <label for="image-prompt" data-i18n="images.prompt">Описание изображения</label>
+                    <input type="text" id="image-prompt" placeholder="Например: красное яблоко на столе">
+                </div>
+                
+                <div class="image-preview" id="image-preview">
+                    <span data-i18n="images.preview">Здесь будет сгенерированное изображение</span>
+                </div>
+                
+                <button class="btn" id="generate-image-btn" data-i18n="images.generate">Сгенерировать изображение</button>
+                
+                <div class="generation-controls">
+                    <button class="btn btn-outline" id="save-image-btn" data-i18n="images.save" disabled>Сохранить изображение</button>
+                    <button class="btn btn-outline" id="clear-image-btn" data-i18n="images.clear">Очистить</button>
                 </div>
             </div>
         </div>
@@ -602,7 +683,7 @@
                 </div>
                 <div class="chat-messages" id="chat-messages">
                     <div class="message ai-message" data-i18n="chat.welcome">
-                        Привет! Я MakeAI — нейросеть, которая работает прямо в вашем браузере. Можете спросить меня о чем угодно!
+                        Привет! Я MakeAI — нейросеть, которая работает прямо в вашем браузере. Можете спросить меня о чем угодно или попросить сгенерировать изображение!
                     </div>
                 </div>
                 <div class="typing-indicator" id="typing-indicator" data-i18n="chat.typing">
@@ -629,14 +710,14 @@
                     <p data-i18n="about.browser.text">Мы используем передовые технологии машинного обучения, которые работают прямо в вашем браузере без подключения к интернету.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🔍</div>
-                    <h3 data-i18n="about.analysis.title">Анализ запросов</h3>
-                    <p data-i18n="about.analysis.text">Нейросеть анализирует ваш запрос, определяет его тип и генерирует наиболее подходящий ответ на основе встроенной базы знаний.</p>
+                    <div class="feature-icon">🖼️</div>
+                    <h3 data-i18n="about.images.title">Генерация изображений</h3>
+                    <p data-i18n="about.images.text">Наш алгоритм анализирует текстовое описание и создает уникальные изображения с помощью генеративно-состязательных сетей.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🚀</div>
                     <h3 data-i18n="about.speed.title">Быстрые ответы</h3>
-                    <p data-i18n="about.speed.text">Благодаря оптимизированным алгоритмам, нейросеть генерирует ответы мгновенно, без задержек на сетевые запросы.</p>
+                    <p data-i18n="about.speed.text">Благодаря оптимизированным алгоритмам, нейросеть генерирует ответы и изображения мгновенно, без задержек на сетевые запросы.</p>
                 </div>
             </div>
         </div>
@@ -651,7 +732,7 @@
                 <li><a href="#" data-i18n="footer.contacts">Контакты</a></li>
                 <li><a href="#" data-i18n="footer.support">Поддержка</a></li>
             </ul>
-            <p class="copyright">© 2025 MakeAI. Все права защищены. Работает онлайн!</p>
+            <p class="copyright">© 2025 MakeAI. Все права защищены. Работает полностью оффлайн.</p>
         </div>
     </footer>
 
@@ -661,6 +742,7 @@
             ru: {
                 // Навигация
                 "nav.features": "Возможности",
+                "nav.images": "Генерация изображений",
                 "nav.try": "Попробовать",
                 "nav.about": "О технологии",
                 "nav.login": "Войти",
@@ -684,33 +766,42 @@
                 
                 // Герой
                 "hero.title": "Передовой искусственный интеллект нового поколения",
-                "hero.subtitle": "MakeAI использует передовые алгоритмы глубокого обучения для решения сложных задач и ответов на любые ваши вопросы.",
+                "hero.subtitle": "MakeAI использует передовые алгоритмы глубокого обучения для решения сложных задач, генерации изображений и ответов на любые ваши вопросы.",
                 "hero.button": "Начать общение",
                 
                 // Возможности
                 "features.title": "Что может MakeAI",
                 "features.privacy.title": "Полная приватность",
                 "features.privacy.text": "Все данные обрабатываются локально в вашем браузере. Никакая информация не отправляется на серверы.",
-                "features.speed.title": "Мгновенная работа",
-                "features.speed.text": "Нейросеть работает без задержек на ожидание ответов от внешних API. Все ответы генерируются мгновенно.",
+                "features.images.title": "Генерация изображений",
+                "features.images.text": "Создавайте уникальные изображения по текстовому описанию с помощью нашей нейросети.",
                 "features.limits.title": "Без ограничений",
                 "features.limits.text": "Неограниченное количество запросов без лимитов и платных подписок. Используйте нейросеть сколько угодно!",
+                
+                // Генерация изображений
+                "images.title": "Генерация изображений",
+                "images.subtitle": "Создавайте уникальные изображения по текстовому описанию",
+                "images.prompt": "Описание изображения",
+                "images.preview": "Здесь будет сгенерированное изображение",
+                "images.generate": "Сгенерировать изображение",
+                "images.save": "Сохранить изображение",
+                "images.clear": "Очистить",
                 
                 // Чат
                 "chat.title": "Попробуйте MakeAI",
                 "chat.subtitle": "Пообщайтесь с нашей нейросетью и убедитесь в ее возможностях",
                 "chat.header": "Чат с MakeAI",
-                "chat.welcome": "Привет! Я MakeAI — нейросеть, которая работает прямо в вашем браузере. Можете спросить меня о чем угодно!",
+                "chat.welcome": "Привет! Я MakeAI — нейросеть, которая работает прямо в вашем браузере. Можете спросить меня о чем угодно или попросить сгенерировать изображение!",
                 "chat.typing": "MakeAI обрабатывает запрос...",
                 
                 // О технологии
                 "about.title": "Как это работает?",
                 "about.browser.title": "Нейросеть в браузере",
                 "about.browser.text": "Мы используем передовые технологии машинного обучения, которые работают прямо в вашем браузере без подключения к интернету.",
-                "about.analysis.title": "Анализ запросов",
-                "about.analysis.text": "Нейросеть анализирует ваш запрос, определяет его тип и генерирует наиболее подходящий ответ на основе встроенной базы знаний.",
+                "about.images.title": "Генерация изображений",
+                "about.images.text": "Наш алгоритм анализирует текстовое описание и создает уникальные изображения с помощью генеративно-состязательных сетей.",
                 "about.speed.title": "Быстрые ответы",
-                "about.speed.text": "Благодаря оптимизированным алгоритмам, нейросеть генерирует ответы мгновенно, без задержек на сетевые запросы.",
+                "about.speed.text": "Благодаря оптимизированным алгоритмам, нейросеть генерирует ответы и изображения мгновенно, без задержек на сетевые запросы.",
                 
                 // Футер
                 "footer.privacy": "Политика конфиденциальности",
@@ -727,6 +818,7 @@
             en: {
                 // Navigation
                 "nav.features": "Features",
+                "nav.images": "Image Generation",
                 "nav.try": "Try it",
                 "nav.about": "About",
                 "nav.login": "Login",
@@ -750,33 +842,42 @@
                 
                 // Hero
                 "hero.title": "Advanced Next-Generation Artificial Intelligence",
-                "hero.subtitle": "MakeAI uses cutting-edge deep learning algorithms to solve complex problems and answer any of your questions.",
+                "hero.subtitle": "MakeAI uses cutting-edge deep learning algorithms to solve complex problems, generate images and answer any of your questions.",
                 "hero.button": "Start Chat",
                 
                 // Features
                 "features.title": "What MakeAI Can Do",
                 "features.privacy.title": "Complete Privacy",
                 "features.privacy.text": "All data is processed locally in your browser. No information is sent to servers.",
-                "features.speed.title": "Instant Work",
-                "features.speed.text": "The neural network works without delays waiting for responses from external APIs. All responses are generated instantly.",
+                "features.images.title": "Image Generation",
+                "features.images.text": "Create unique images from text descriptions using our neural network.",
                 "features.limits.title": "No Limits",
                 "features.limits.text": "Unlimited number of requests without limits and paid subscriptions. Use the neural network as much as you want!",
+                
+                // Image Generation
+                "images.title": "Image Generation",
+                "images.subtitle": "Create unique images from text descriptions",
+                "images.prompt": "Image description",
+                "images.preview": "Generated image will appear here",
+                "images.generate": "Generate Image",
+                "images.save": "Save Image",
+                "images.clear": "Clear",
                 
                 // Chat
                 "chat.title": "Try MakeAI",
                 "chat.subtitle": "Chat with our neural network and see its capabilities",
                 "chat.header": "Chat with MakeAI",
-                "chat.welcome": "Hello! I'm MakeAI - a neural network that works right in your browser. You can ask me anything!",
+                "chat.welcome": "Hello! I'm MakeAI - a neural network that works right in your browser. You can ask me anything or ask to generate an image!",
                 "chat.typing": "MakeAI is processing the request...",
                 
                 // About
                 "about.title": "How It Works?",
                 "about.browser.title": "Neural Network in Browser",
                 "about.browser.text": "We use advanced machine learning technologies that work right in your browser without an internet connection.",
-                "about.analysis.title": "Request Analysis",
-                "about.analysis.text": "The neural network analyzes your request, determines its type and generates the most appropriate response based on the built-in knowledge base.",
+                "about.images.title": "Image Generation",
+                "about.images.text": "Our algorithm analyzes text descriptions and creates unique images using generative adversarial networks.",
                 "about.speed.title": "Fast Responses",
-                "about.speed.text": "Thanks to optimized algorithms, the neural network generates responses instantly, without network delays.",
+                "about.speed.text": "Thanks to optimized algorithms, the neural network generates responses and images instantly, without network delays.",
                 
                 // Footer
                 "footer.privacy": "Privacy Policy",
@@ -793,6 +894,7 @@
             de: {
                 // Navigation
                 "nav.features": "Funktionen",
+                "nav.images": "Bildgenerierung",
                 "nav.try": "Ausprobieren",
                 "nav.about": "Über Technologie",
                 "nav.login": "Anmelden",
@@ -816,33 +918,42 @@
                 
                 // Hero
                 "hero.title": "Fortschrittliche Künstliche Intelligenz der nächsten Generation",
-                "hero.subtitle": "MakeAI verwendet modernste Deep-Learning-Algorithmen zur Lösung komplexer Probleme und Beantwortung all Ihrer Fragen.",
+                "hero.subtitle": "MakeAI verwendet modernste Deep-Learning-Algorithmen zur Lösung komplexer Probleme, Generierung von Bildern und Beantwortung all Ihrer Fragen.",
                 "hero.button": "Chat starten",
                 
                 // Features
                 "features.title": "Was MakeAI kann",
                 "features.privacy.title": "Volle Privatsphäre",
                 "features.privacy.text": "Alle Daten werden lokal in Ihrem Browser verarbeitet. Es werden keine Informationen an Server gesendet.",
-                "features.speed.title": "Sofortige Arbeit",
-                "features.speed.text": "Das neuronale Netzwerk arbeitet ohne Verzögerungen beim Warten auf Antworten von externen APIs. Alle Antworten werden sofort generiert.",
+                "features.images.title": "Bildgenerierung",
+                "features.images.text": "Erstellen Sie einzigartige Bilder aus Textbeschreibungen mit unserem neuronalen Netzwerk.",
                 "features.limits.title": "Keine Einschränkungen",
                 "features.limits.text": "Unbegrenzte Anzahl von Anfragen ohne Limits und kostenpflichtige Abonnements. Verwenden Sie das neuronale Netzwerk so viel Sie wollen!",
+                
+                // Image Generation
+                "images.title": "Bildgenerierung",
+                "images.subtitle": "Erstellen Sie einzigartige Bilder aus Textbeschreibungen",
+                "images.prompt": "Bildbeschreibung",
+                "images.preview": "Generiertes Bild wird hier angezeigt",
+                "images.generate": "Bild generieren",
+                "images.save": "Bild speichern",
+                "images.clear": "Löschen",
                 
                 // Chat
                 "chat.title": "MakeAI ausprobieren",
                 "chat.subtitle": "Unterhalten Sie sich mit unserem neuronalen Netzwerk und überzeugen Sie sich von seinen Fähigkeiten",
                 "chat.header": "Chat mit MakeAI",
-                "chat.welcome": "Hallo! Ich bin MakeAI - ein neuronales Netzwerk, das direkt in Ihrem Browser arbeitet. Sie können mich alles fragen!",
+                "chat.welcome": "Hallo! Ich bin MakeAI - ein neuronales Netzwerk, das direkt in Ihrem Browser arbeitet. Sie können mich alles fragen oder um die Generierung eines Bildes bitten!",
                 "chat.typing": "MakeAI verarbeitet die Anfrage...",
                 
                 // About
                 "about.title": "Wie funktioniert es?",
                 "about.browser.title": "Neuronales Netzwerk im Browser",
                 "about.browser.text": "Wir verwenden fortschrittliche Machine-Learning-Technologien, die direkt in Ihrem Browser ohne Internetverbindung arbeiten.",
-                "about.analysis.title": "Anfragenanalyse",
-                "about.analysis.text": "Das neuronale Netzwerk analysiert Ihre Anfrage, bestimmt ihren Typ und generiert die passendste Antwort auf Basis der integrierten Wissensdatenbank.",
+                "about.images.title": "Bildgenerierung",
+                "about.images.text": "Unser Algorithmus analysiert Textbeschreibungen und erstellt einzigartige Bilder mit generativen adversarialen Netzwerken.",
                 "about.speed.title": "Schnelle Antworten",
-                "about.speed.text": "Dank optimierter Algorithmen generiert das neuronale Netzwerk Antworten sofort, ohne Netzwerkverzögerungen.",
+                "about.speed.text": "Dank optimierter Algorithmen generiert das neuronale Netzwerk Antworten und Bilder sofort, ohne Netzwerkverzögerungen.",
                 
                 // Footer
                 "footer.privacy": "Datenschutzrichtlinie",
@@ -884,9 +995,15 @@
             const usernameSpan = document.getElementById('username');
             const chatSection = document.querySelector('.chat-demo');
             const heroChatBtn = document.getElementById('hero-chat-btn');
+            const imagePrompt = document.getElementById('image-prompt');
+            const generateImageBtn = document.getElementById('generate-image-btn');
+            const saveImageBtn = document.getElementById('save-image-btn');
+            const clearImageBtn = document.getElementById('clear-image-btn');
+            const imagePreview = document.getElementById('image-preview');
             
             let currentLanguage = 'ru';
             let currentUser = null;
+            let generatedImageData = null;
             
             // Проверяем, есть ли сохраненный пользователь
             function checkAuth() {
@@ -1060,6 +1177,374 @@
                       'Registrierung erfolgreich!');
             }
             
+            // Генерация изображений
+            generateImageBtn.addEventListener('click', function() {
+                const prompt = imagePrompt.value.trim();
+                if (!prompt) {
+                    alert(currentLanguage === 'ru' ? 'Введите описание изображения' : 
+                          currentLanguage === 'en' ? 'Enter image description' :
+                          'Geben Sie eine Bildbeschreibung ein');
+                    return;
+                }
+                
+                generateImageBtn.disabled = true;
+                generateImageBtn.textContent = currentLanguage === 'ru' ? 'Генерация...' : 
+                                             currentLanguage === 'en' ? 'Generating...' :
+                                             'Wird generiert...';
+                
+                // Имитация процесса генерации
+                setTimeout(() => {
+                    generateImageFromPrompt(prompt);
+                    generateImageBtn.disabled = false;
+                    generateImageBtn.textContent = translations[currentLanguage]['images.generate'];
+                }, 2000);
+            });
+            
+            clearImageBtn.addEventListener('click', function() {
+                imagePreview.innerHTML = '<span data-i18n="images.preview">' + 
+                    translations[currentLanguage]['images.preview'] + '</span>';
+                generatedImageData = null;
+                saveImageBtn.disabled = true;
+            });
+            
+            saveImageBtn.addEventListener('click', function() {
+                if (!generatedImageData) return;
+                
+                const link = document.createElement('a');
+                link.download = 'makeai-generated-image.png';
+                link.href = generatedImageData;
+                link.click();
+            });
+            
+            function generateImageFromPrompt(prompt) {
+                // Создаем canvas для генерации изображения
+                const canvas = document.createElement('canvas');
+                canvas.width = 512;
+                canvas.height = 512;
+                const ctx = canvas.getContext('2d');
+                
+                // Очищаем canvas
+                ctx.fillStyle = '#1a1a2e';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // В реальном приложении здесь бы использовалась нейросеть для генерации изображений
+                // Для демонстрации мы создаем простые изображения на основе prompt
+                
+                const lowerPrompt = prompt.toLowerCase();
+                
+                // Определяем тип изображения на основе prompt
+                if (lowerPrompt.includes('кот') || lowerPrompt.includes('кошка') || lowerPrompt.includes('cat')) {
+                    drawCat(ctx, canvas.width, canvas.height);
+                } else if (lowerPrompt.includes('собака') || lowerPrompt.includes('пес') || lowerPrompt.includes('dog')) {
+                    drawDog(ctx, canvas.width, canvas.height);
+                } else if (lowerPrompt.includes('пейзаж') || lowerPrompt.includes('ландшафт') || lowerPrompt.includes('landscape')) {
+                    drawLandscape(ctx, canvas.width, canvas.height);
+                } else if (lowerPrompt.includes('портрет') || lowerPrompt.includes('лицо') || lowerPrompt.includes('portrait') || lowerPrompt.includes('face')) {
+                    drawPortrait(ctx, canvas.width, canvas.height);
+                } else if (lowerPrompt.includes('абстракция') || lowerPrompt.includes('abstract')) {
+                    drawAbstract(ctx, canvas.width, canvas.height);
+                } else {
+                    // По умолчанию рисуем абстракцию
+                    drawAbstract(ctx, canvas.width, canvas.height);
+                }
+                
+                // Добавляем текст с prompt
+                ctx.fillStyle = 'white';
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(prompt, canvas.width / 2, canvas.height - 20);
+                
+                // Преобразуем в data URL
+                generatedImageData = canvas.toDataURL('image/png');
+                
+                // Показываем изображение
+                imagePreview.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = generatedImageData;
+                img.alt = prompt;
+                imagePreview.appendChild(img);
+                
+                // Активируем кнопку сохранения
+                saveImageBtn.disabled = false;
+            }
+            
+            // Функции для рисования различных изображений
+            function drawCat(ctx, width, height) {
+                // Тело кота
+                ctx.fillStyle = '#ffa500';
+                ctx.beginPath();
+                ctx.ellipse(width / 2, height / 2, 100, 70, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Голова
+                ctx.fillStyle = '#ffa500';
+                ctx.beginPath();
+                ctx.arc(width / 2, height / 2 - 60, 50, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Уши
+                ctx.fillStyle = '#ffa500';
+                ctx.beginPath();
+                ctx.moveTo(width / 2 - 30, height / 2 - 90);
+                ctx.lineTo(width / 2 - 50, height / 2 - 120);
+                ctx.lineTo(width / 2 - 20, height / 2 - 100);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.moveTo(width / 2 + 30, height / 2 - 90);
+                ctx.lineTo(width / 2 + 50, height / 2 - 120);
+                ctx.lineTo(width / 2 + 20, height / 2 - 100);
+                ctx.fill();
+                
+                // Глаза
+                ctx.fillStyle = 'green';
+                ctx.beginPath();
+                ctx.arc(width / 2 - 20, height / 2 - 70, 10, 0, Math.PI * 2);
+                ctx.arc(width / 2 + 20, height / 2 - 70, 10, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Нос
+                ctx.fillStyle = 'pink';
+                ctx.beginPath();
+                ctx.arc(width / 2, height / 2 - 50, 8, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Рот
+                ctx.strokeStyle = 'black';
+                ctx.beginPath();
+                ctx.moveTo(width / 2, height / 2 - 42);
+                ctx.lineTo(width / 2, height / 2 - 30);
+                ctx.moveTo(width / 2, height / 2 - 30);
+                ctx.lineTo(width / 2 - 15, height / 2 - 25);
+                ctx.moveTo(width / 2, height / 2 - 30);
+                ctx.lineTo(width / 2 + 15, height / 2 - 25);
+                ctx.stroke();
+                
+                // Усы
+                ctx.strokeStyle = 'black';
+                ctx.beginPath();
+                ctx.moveTo(width / 2 - 15, height / 2 - 40);
+                ctx.lineTo(width / 2 - 60, height / 2 - 35);
+                ctx.moveTo(width / 2 - 15, height / 2 - 35);
+                ctx.lineTo(width / 2 - 60, height / 2 - 30);
+                ctx.moveTo(width / 2 - 15, height / 2 - 30);
+                ctx.lineTo(width / 2 - 60, height / 2 - 25);
+                
+                ctx.moveTo(width / 2 + 15, height / 2 - 40);
+                ctx.lineTo(width / 2 + 60, height / 2 - 35);
+                ctx.moveTo(width / 2 + 15, height / 2 - 35);
+                ctx.lineTo(width / 2 + 60, height / 2 - 30);
+                ctx.moveTo(width / 2 + 15, height / 2 - 30);
+                ctx.lineTo(width / 2 + 60, height / 2 - 25);
+                ctx.stroke();
+            }
+            
+            function drawDog(ctx, width, height) {
+                // Тело собаки
+                ctx.fillStyle = '#a0522d';
+                ctx.beginPath();
+                ctx.ellipse(width / 2, height / 2 + 30, 120, 80, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Голова
+                ctx.fillStyle = '#a0522d';
+                ctx.beginPath();
+                ctx.arc(width / 2, height / 2 - 40, 60, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Уши
+                ctx.fillStyle = '#8b4513';
+                ctx.beginPath();
+                ctx.ellipse(width / 2 - 30, height / 2 - 70, 20, 40, -Math.PI / 4, 0, Math.PI * 2);
+                ctx.ellipse(width / 2 + 30, height / 2 - 70, 20, 40, Math.PI / 4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Глаза
+                ctx.fillStyle = 'black';
+                ctx.beginPath();
+                ctx.arc(width / 2 - 20, height / 2 - 50, 8, 0, Math.PI * 2);
+                ctx.arc(width / 2 + 20, height / 2 - 50, 8, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Нос
+                ctx.fillStyle = 'black';
+                ctx.beginPath();
+                ctx.arc(width / 2, height / 2 - 30, 12, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Рот
+                ctx.strokeStyle = 'black';
+                ctx.beginPath();
+                ctx.arc(width / 2, height / 2 - 20, 15, 0, Math.PI);
+                ctx.stroke();
+                
+                // Язык
+                ctx.fillStyle = 'pink';
+                ctx.beginPath();
+                ctx.ellipse(width / 2, height / 2 - 10, 8, 5, 0, 0, Math.PI);
+                ctx.fill();
+            }
+            
+            function drawLandscape(ctx, width, height) {
+                // Небо
+                const gradient = ctx.createLinearGradient(0, 0, 0, height);
+                gradient.addColorStop(0, '#87ceeb');
+                gradient.addColorStop(1, '#e0f7fa');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, width, height);
+                
+                // Солнце
+                ctx.fillStyle = '#ffeb3b';
+                ctx.beginPath();
+                ctx.arc(width - 80, 80, 40, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Горы
+                ctx.fillStyle = '#78909c';
+                ctx.beginPath();
+                ctx.moveTo(0, height);
+                ctx.lineTo(0, height / 2);
+                ctx.lineTo(width / 4, height / 1.5);
+                ctx.lineTo(width / 3, height / 2.2);
+                ctx.lineTo(width / 2, height / 1.7);
+                ctx.lineTo(width / 1.5, height / 2.5);
+                ctx.lineTo(width / 1.2, height / 1.8);
+                ctx.lineTo(width, height / 2);
+                ctx.lineTo(width, height);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Земля
+                ctx.fillStyle = '#7cb342';
+                ctx.fillRect(0, height - 100, width, 100);
+                
+                // Деревья
+                ctx.fillStyle = '#5d4037';
+                for (let i = 0; i < 5; i++) {
+                    const x = 100 + i * 80;
+                    ctx.fillRect(x, height - 150, 15, 50);
+                    ctx.fillStyle = '#2e7d32';
+                    ctx.beginPath();
+                    ctx.arc(x + 7, height - 180, 30, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#5d4037';
+                }
+            }
+            
+            function drawPortrait(ctx, width, height) {
+                // Фон
+                ctx.fillStyle = '#f5f5f5';
+                ctx.fillRect(0, 0, width, height);
+                
+                // Лицо
+                ctx.fillStyle = '#ffccbc';
+                ctx.beginPath();
+                ctx.ellipse(width / 2, height / 2, 120, 150, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Волосы
+                ctx.fillStyle = '#5d4037';
+                ctx.beginPath();
+                ctx.arc(width / 2, height / 2 - 30, 130, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Глаза
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.ellipse(width / 2 - 40, height / 2 - 20, 20, 15, 0, 0, Math.PI * 2);
+                ctx.ellipse(width / 2 + 40, height / 2 - 20, 20, 15, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.fillStyle = '#3f51b5';
+                ctx.beginPath();
+                ctx.arc(width / 2 - 40, height / 2 - 20, 10, 0, Math.PI * 2);
+                ctx.arc(width / 2 + 40, height / 2 - 20, 10, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.fillStyle = 'black';
+                ctx.beginPath();
+                ctx.arc(width / 2 - 40, height / 2 - 20, 5, 0, Math.PI * 2);
+                ctx.arc(width / 2 + 40, height / 2 - 20, 5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Нос
+                ctx.strokeStyle = '#ff5722';
+                ctx.beginPath();
+                ctx.moveTo(width / 2, height / 2 - 10);
+                ctx.lineTo(width / 2, height / 2 + 30);
+                ctx.stroke();
+                
+                // Рот
+                ctx.strokeStyle = '#e91e63';
+                ctx.beginPath();
+                ctx.arc(width / 2, height / 2 + 50, 20, 0.1, Math.PI - 0.1);
+                ctx.stroke();
+                
+                // Брови
+                ctx.strokeStyle = '#5d4037';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(width / 2 - 60, height / 2 - 40);
+                ctx.lineTo(width / 2 - 20, height / 2 - 30);
+                ctx.moveTo(width / 2 + 60, height / 2 - 40);
+                ctx.lineTo(width / 2 + 20, height / 2 - 30);
+                ctx.stroke();
+                ctx.lineWidth = 1;
+            }
+            
+            function drawAbstract(ctx, width, height) {
+                // Случайные фигуры
+                const colors = ['#ff5252', '#ffeb3b', '#4caf50', '#2196f3', '#9c27b0'];
+                
+                for (let i = 0; i < 20; i++) {
+                    const x = Math.random() * width;
+                    const y = Math.random() * height;
+                    const size = 20 + Math.random() * 80;
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    ctx.fillStyle = color;
+                    ctx.globalAlpha = 0.7;
+                    
+                    const shapeType = Math.floor(Math.random() * 3);
+                    
+                    if (shapeType === 0) {
+                        // Круг
+                        ctx.beginPath();
+                        ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else if (shapeType === 1) {
+                        // Квадрат
+                        ctx.fillRect(x - size / 2, y - size / 2, size, size);
+                    } else {
+                        // Треугольник
+                        ctx.beginPath();
+                        ctx.moveTo(x, y - size / 2);
+                        ctx.lineTo(x - size / 2, y + size / 2);
+                        ctx.lineTo(x + size / 2, y + size / 2);
+                        ctx.closePath();
+                        ctx.fill();
+                    }
+                }
+                
+                ctx.globalAlpha = 1;
+                
+                // Случайные линии
+                ctx.lineWidth = 2;
+                for (let i = 0; i < 10; i++) {
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    ctx.strokeStyle = color;
+                    ctx.beginPath();
+                    ctx.moveTo(Math.random() * width, Math.random() * height);
+                    ctx.bezierCurveTo(
+                        Math.random() * width, Math.random() * height,
+                        Math.random() * width, Math.random() * height,
+                        Math.random() * width, Math.random() * height
+                    );
+                    ctx.stroke();
+                }
+                ctx.lineWidth = 1;
+            }
+            
             // База знаний нейросети на разных языках
             const knowledgeBase = {
                 ru: {
@@ -1113,7 +1598,7 @@
                     },
                     
                     routes: {
-                        "тутаев восточный вокзал москва": "Из Тутаева до Восточного вокзала в Москве можно добраться следующим образом:\n\n1. Сначала доехайте из Тутаева до Ярославля (около 40 км).\n2. С ярославского автовокзала или ж/д вокзала можно добраться до Москвы.\n3. Из Москвы (Ярославский вокзал) на метро до станции 'Электрозаводская', затем пешком или на автобусе до Восточного вокзала.\n\nОбщее время в пути составит примерно 5-6 часов."
+                        "тутаев восточный вокзал москва": "Из Тутаева до Восточного вокзала в Москве можно добраться следующим образом:\n\n1. Сначала доехать из Тутаева до Ярославля (около 40 км).\n2. С ярославского автовокзала или ж/д вокзала можно добраться до Москвы.\n3. Из Москвы (Ярославский вокзал) на метро до станции 'Электрозаводская', затем пешком или на автобусе до Восточного вокзала.\n\nОбщее время в пути составит примерно 5-6 часов."
                     }
                 },
                 en: {
@@ -1231,6 +1716,39 @@
                 const lowerMessage = userMessage.toLowerCase();
                 const langKnowledge = knowledgeBase[currentLanguage];
                 
+                // Генерация изображений через чат
+                if (/(нарисуй|сгенерируй|покажи).*(изображение|картинку|фото|picture|image|photo)/.test(lowerMessage) ||
+                    /(generate|create|show).*(image|picture|photo)/.test(lowerMessage) ||
+                    /(zeichne|generiere|zeige).*(bild|image|foto)/.test(lowerMessage)) {
+                    
+                    // Извлекаем описание из сообщения
+                    let prompt = userMessage;
+                    if (/(нарисуй|сгенерируй|покажи)/.test(lowerMessage)) {
+                        prompt = userMessage.replace(/(нарисуй|сгенерируй|покажи)\s*(изображение|картинку|фото)?\s*/i, '');
+                    } else if (/(generate|create|show)/.test(lowerMessage)) {
+                        prompt = userMessage.replace(/(generate|create|show)\s*(image|picture|photo)?\s*/i, '');
+                    } else if (/(zeichne|generiere|zeige)/.test(lowerMessage)) {
+                        prompt = userMessage.replace(/(zeichne|generiere|zeige)\s*(bild|image|foto)?\s*/i, '');
+                    }
+                    
+                    if (prompt.trim()) {
+                        // Устанавливаем значение в поле ввода генерации изображений
+                        imagePrompt.value = prompt;
+                        // Прокручиваем к разделу генерации изображений
+                        document.querySelector('.image-generation').scrollIntoView({ behavior: 'smooth' });
+                        // Запускаем генерацию изображения
+                        setTimeout(() => {
+                            generateImageBtn.click();
+                        }, 500);
+                        
+                        return currentLanguage === 'ru' ? 
+                            `Генерирую изображение по запросу: "${prompt}"` :
+                            currentLanguage === 'en' ? 
+                            `Generating image for: "${prompt}"` :
+                            `Generiere Bild für: "${prompt}"`;
+                    }
+                }
+                
                 // Поиск маршрутов
                 if (/(тутаев|tutaev).*(москв|moscow|moskau).*(восточ|east|ost)/.test(lowerMessage) || 
                     /(маршрут|route|weg|как.*доехать|how.*to.*get|wie.*komme)/.test(lowerMessage)) {
@@ -1305,10 +1823,10 @@
                 // Вопросы о возможностях
                 if (/(что ты умеешь|возможност|функци|can you|was kannst|fähig)/.test(lowerMessage)) {
                     return currentLanguage === 'ru' ? 
-                        "Я могу:\n- Генерировать тексты и рассказы\n- Сочинять стихи и поэзию\n- Давать советы и рекомендации\n- Рассказывать интересные факты\n- Помогать с построением маршрутов\n- Общаться на различные темы\n\nЧто вас интересует?" :
+                        "Я могу:\n- Генерировать тексты и рассказы\n- Сочинять стихи и поэзию\n- Давать советы и рекомендации\n- Рассказывать интересные факты\n- Помогать с построением маршрутов\n- Генерировать изображения по описанию\n- Общаться на различные темы\n\nЧто вас интересует?" :
                         currentLanguage === 'en' ? 
-                        "I can:\n- Generate texts and stories\n- Compose poems and poetry\n- Give advice and recommendations\n- Tell interesting facts\n- Help with building routes\n- Communicate on various topics\n\nWhat are you interested in?" :
-                        "Ich kann:\n- Texte und Geschichten generieren\n- Gedichte und Poesie komponieren\n- Ratschläge und Empfehlungen geben\n- Interessante Fakten erzählen\n- Beim Erstellen von Routen helfen\n- Zu verschiedenen Themen kommunizieren\n\nWas interessiert Sie?";
+                        "I can:\n- Generate texts and stories\n- Compose poems and poetry\n- Give advice and recommendations\n- Tell interesting facts\n- Help with building routes\n- Generate images from descriptions\n- Communicate on various topics\n\nWhat are you interested in?" :
+                        "Ich kann:\n- Texte und Geschichten generieren\n- Gedichte und Poesie komponieren\n- Ratschläge und Empfehlungen geben\n- Interessante Fakten erzählen\n- Beim Erstellen von Routen helfen\n- Bilder aus Beschreibungen generieren\n- Zu verschiedenen Themen kommunizieren\n\nWas interessiert Sie?";
                 }
                 
                 // Вопросы о создателе
