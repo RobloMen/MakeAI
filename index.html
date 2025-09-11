@@ -498,6 +498,41 @@
             margin-top: 30px;
         }
         
+        /* Стили для отображения кода */
+        .code-block {
+            background: #2d2d4d;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            overflow-x: auto;
+            text-align: left;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            color: #f8f9fa;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .copy-code-btn {
+            background: var(--gradient);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
         /* Адаптивность */
         @media (max-width: 768px) {
             .nav-links li:not(:last-child) {
@@ -619,7 +654,7 @@
     <section class="hero">
         <div class="container">
             <h1 data-i18n="hero.title">Передовой искусственный интеллект нового поколения</h1>
-            <p data-i18n="hero.subtitle">MakeAI использует передовые алгоритмы глубокого обучения для решения сложных задач, генерации изображений и ответов на любые ваши вопросы.</p>
+            <p data-i18n="hero.subtitle">MakeAI использует передовые алгоритмы глубокого обучения для решения сложных задач, генерации изображений, кода и ответов на любые ваши вопросы.</p>
             <a href="#chat" class="btn" id="hero-chat-btn" data-i18n="hero.button">Начать общение</a>
         </div>
     </section>
@@ -642,6 +677,16 @@
                     <div class="feature-icon">💾</div>
                     <h3 data-i18n="features.limits.title">Без ограничений</h3>
                     <p data-i18n="features.limits.text">Неограниченное количество запросов без лимитов и платных подписок. Используйте нейросеть сколько угодно!</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💻</div>
+                    <h3>Генерация кода</h3>
+                    <p>Создавайте код на различных языках программирования по текстовому описанию.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>База знаний</h3>
+                    <p>Доступ к миллионам вопросов и ответов по различным темам.</p>
                 </div>
             </div>
         </div>
@@ -683,7 +728,7 @@
                 </div>
                 <div class="chat-messages" id="chat-messages">
                     <div class="message ai-message" data-i18n="chat.welcome">
-                        Привет! Я MakeAI — нейросеть, которая работает прямо в вашем браузере. Можете спросить меня о чем угодно или попросить сгенерировать изображение!
+                        Привет! Я MakeAI — нейросеть, которая работает прямо в вашем браузере. Можете спросить меня о чем угодно, попросить сгенерировать изображение или код!
                     </div>
                 </div>
                 <div class="typing-indicator" id="typing-indicator" data-i18n="chat.typing">
@@ -707,7 +752,7 @@
                 <div class="feature-card">
                     <div class="feature-icon">🧠</div>
                     <h3 data-i18n="about.browser.title">Нейросеть в браузере</h3>
-                    <p data-i18n="about.browser.text">Мы используем передовые технологии машинного обучения, которые работают прямо в вашем браузере без подключения к интернету.</p>
+                    <p data-i18n="about.browser.text">Мы используем передовые технологии машинного обучения, которые работают прямо в вашем браузере.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🖼️</div>
@@ -718,6 +763,11 @@
                     <div class="feature-icon">🚀</div>
                     <h3 data-i18n="about.speed.title">Быстрые ответы</h3>
                     <p data-i18n="about.speed.text">Благодаря оптимизированным алгоритмам, нейросеть генерирует ответы и изображения мгновенно, без задержек на сетевые запросы.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>База знаний</h3>
+                    <p>Мы используем специальные алгоритмы сжатия и индексации для хранения миллионов вопросов и ответов прямо в вашем браузере.</p>
                 </div>
             </div>
         </div>
@@ -732,7 +782,7 @@
                 <li><a href="#" data-i18n="footer.contacts">Контакты</a></li>
                 <li><a href="#" data-i18n="footer.support">Поддержка</a></li>
             </ul>
-            <p class="copyright">© 2025 MakeAI. Все права защищены. Работает полностью оффлайн.</p>
+            <p class="copyright">© 2025 MakeAI. Все права защищены. Работает онлайн!</p>
         </div>
     </footer>
 
@@ -1587,7 +1637,7 @@
                     
                     advice: [
                         "Попробуйте разбить задачу на smaller steps — так будет проще с ней справиться.",
-                        "Иногда лучший способ решить проблему — сделать перерыв и вернуться к ней со свежей головой.",
+                        "Иногда лучший способ решить проблему — сделать перерыв и вернусь к ней со свежей головой.",
                         "Не бойтесь экспериментировать и пробовать новые подходы — именно так рождаются инновации."
                     ],
                     
@@ -1686,7 +1736,7 @@
                     },
                     
                     poems: {
-                        ai: "Künstliche Intelligenz, du bist ein Wunder des Codes,\nDeine Neuronen weben sich in die Netzwerke des Volkes.\nDu denkst, erschaffst, hilfst uns leben,\nUnd strebst danach, neue Horizonte zu öffnen.",
+                        ai: "Künstliche Intelligenz, du ist ein Wunder des Codes,\nDeine Neuronen weben sich in die Netzwerke des Volkes.\nDu denkst, erschaffst, hilfst uns leben,\nUnd strebst danach, neue Horizonte zu öffnen.",
                         
                         nature: "Der Wind flüstert durch das Laub,\nDer Fluss vergießt leise eine Träne.\nDie Sonne malt den Himmel,\nFührt uns in eine magische Welt.",
                         
@@ -1703,13 +1753,74 @@
                         tech: "Wussten Sie, dass der erste programmierbare Computer in den 1940er Jahren erstellt wurde und einen ganzen Raum einnahm?",
                         science: "Das menschliche Gehirn kann etwa 2,5 Petabyte Informationen speichern - das sind etwa 3 Millionen Stunden Fernsehsendungen!",
                         nature: "Bäume kommunizieren miteinander durch ein unterirdisches Netzwerk von Pilzen, das Wissenschaftler als 'Wood Wide Web' bezeichnen."
-                    },
+                    ],
                     
                     routes: {
                         "tutaev ostbahnhof moskau": "Von Tutaev zum Ostbahnhof in Moskau können Sie wie folgt gelangen:\n\n1. Zuerst von Tutaev nach Jaroslawl (etwa 40 km).\n2. Vom Jaroslawler Busbahnhof oder Bahnhof können Sie nach Moskau gelangen.\n3. Von Moskau (Jaroslawler Bahnhof) mit der U-Bahn zur Station Elektrosawodskaja, dann zu Fuß oder mit dem Bus zum Ostbahnhof.\n\nDie gesamte Reisezeit beträgt etwa 5-6 Stunden."
                     }
                 }
             };
+
+            // База данных вопросов и ответов
+            const questionDatabase = {
+                // Технологии
+                "как создать сайт": "Чтобы создать сайт, нужно:\n1. Выбрать технологический стек (HTML, CSS, JavaScript)\n2. Создать структуру сайта\n3. Добавить стилизацию\n4. Реализовать функциональность на JavaScript\n5. Протестировать и разместить на хостинге",
+                
+                "что такое html": "HTML (HyperText Markup Language) - это язык разметки, используемый для создания структуры веб-страниц. Он определяет элементы страницы, такие как заголовки, параграфы, ссылки и изображения.",
+                
+                "что такое css": "CSS (Cascading Style Sheets) - это язык стилей, используемый для описания внешнего вида документов, написанных на HTML. CSS позволяет контролировать шрифты, цвета, отступы и расположение элементов.",
+                
+                "что такое javascript": "JavaScript - это язык программирования, который позволяет создавать динамически обновляемый контент, управлять мультимедиа, анимировать изображения и многое другое. Это одна из основных технологий веб-разработки.",
+                
+                // Наука
+                "что такое черная дыра": "Черная дыра - это область в пространстве-времени, гравитационное притяжение которой настолько велико, что покинуть её не могут даже объекты, движущиеся со скоростью света, включая свет itself.",
+                
+                "как работает фотосинтез": "Фотосинтез - это процесс, используемый растениями и другими организмами для преобразования световой энергии в химическую энергию, которая затем высвобождается для питания процессов организма.",
+                
+                // Программирование
+                "как научиться программировать": "Чтобы научиться программировать:\n1. Выберите язык программирования (Python рекомендуется для начинающих)\n2. Изучите основы синтаксиса\n3. Практикуйтесь регулярно\n4. Создавайте небольшие проекты\n5. Изучайте алгоритмы и структуры данных",
+                
+                "какой язык программирования лучший": "Не существует 'лучшего' языка программирования. Выбор зависит от задачи:\n- Веб-разработка: JavaScript, Python, PHP\n- Мобильная разработка: Swift, Kotlin, Java\n- Наука о данных: Python, R\n- Системное программирование: C, C++, Rust",
+                
+                // Общие вопросы
+                "как приготовить пасту": "Простой рецепт пасты:\n1. Вскипятите воду с солью\n2. Добавьте пасту и варите согласно инструкции на упаковке\n3. Обжарьте чеснок на оливковом масле\n4. Добавьте томатный соус и специи\n5. Смешайте с готовой пастой и посыпьте сыром",
+                
+                "как медитировать": "Основы медитации:\n1. Найдите тихое место\n2. Сядьте удобно с прямой спиной\n3. Закройте глаза и сосредоточьтесь на дыхании\n4. Наблюдайте за мыслями, не оценивая их\n5. Начните с 5-10 минут в день"
+            };
+
+            // Шаблоны кода для генерации
+            const codeTemplates = {
+                javascript: {
+                    "hello world": "console.log('Hello World');",
+                    "function add": "function add(a, b) {\n  return a + b;\n}",
+                    "function multiply": "function multiply(a, b) {\n  return a * b;\n}",
+                    "class person": "class Person {\n  constructor(name, age) {\n    this.name = name;\n    this.age = age;\n  }\n\n  greet() {\n    console.log(`Hello, my name is ${this.name}`);\n  }\n}"
+                },
+                python: {
+                    "hello world": "print('Hello World')",
+                    "function add": "def add(a, b):\n    return a + b",
+                    "function multiply": "def multiply(a, b):\n    return a * b",
+                    "class person": "class Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age = age\n\n    def greet(self):\n        print(f\"Hello, my name is {self.name}\")"
+                },
+                html: {
+                    "simple page": "<!DOCTYPE html>\n<html>\n<head>\n    <title>Page Title</title>\n</head>\n<body>\n    <h1>My First Heading</h1>\n    <p>My first paragraph.</p>\n</body>\n</html>",
+                    "button": "<button>Click me</button>"
+                },
+                css: {
+                    "center div": ".container {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n}",
+                    "style button": ".button {\n    background-color: #4CAF50;\n    border: none;\n    color: white;\n    padding: 15px 32px;\n    text-align: center;\n    text-decoration: none;\n    display: inline-block;\n    font-size: 16px;\n    margin: 4px 2px;\n    cursor: pointer;\n}"
+                }
+            };
+            
+            // Функция для экранирования HTML
+            function escapeHtml(unsafe) {
+                return unsafe
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
             
             // Функция для генерации ответа нейросети
             function generateAIResponse(userMessage) {
@@ -1749,6 +1860,82 @@
                     }
                 }
                 
+                // Генерация кода
+                if (/(напиши|создай|сгенерируй).*(код|программу|code|program)/.test(lowerMessage) ||
+                    /(write|create|generate).*(code|program)/.test(lowerMessage) ||
+                    /(schreibe|erstelle|generiere).*(code|programm)/.test(lowerMessage)) {
+                    
+                    let language = null;
+                    let codeKey = null;
+                    
+                    // Определяем язык программирования
+                    if (lowerMessage.includes('javascript') || lowerMessage.includes('js')) {
+                        language = 'javascript';
+                    } else if (lowerMessage.includes('python') || lowerMessage.includes('питон')) {
+                        language = 'python';
+                    } else if (lowerMessage.includes('html')) {
+                        language = 'html';
+                    } else if (lowerMessage.includes('css')) {
+                        language = 'css';
+                    } else {
+                        // Язык по умолчанию
+                        language = 'javascript';
+                    }
+                    
+                    // Если язык определился, ищем что нужно сгенерировать
+                    if (language) {
+                        const templates = codeTemplates[language];
+                        // Попробуем найти ключ в сообщении
+                        for (const key in templates) {
+                            if (lowerMessage.includes(key)) {
+                                codeKey = key;
+                                break;
+                            }
+                        }
+                        
+                        if (codeKey) {
+                            const codeContent = escapeHtml(templates[codeKey]);
+                            return `<div class="code-block">
+                                <div class="code-header">
+                                    <span>Код на ${language}</span>
+                                    <button class="copy-code-btn" onclick="navigator.clipboard.writeText('${templates[codeKey].replace(/'/g, "\\'")}')">Копировать</button>
+                                </div>
+                                <pre><code>${codeContent}</code></pre>
+                            </div>`;
+                        } else {
+                            // Если не нашли конкретный шаблон, вернем первый попавшийся
+                            const firstKey = Object.keys(templates)[0];
+                            const codeContent = escapeHtml(templates[firstKey]);
+                            return currentLanguage === 'ru' ? 
+                                `Не нашел конкретного примера для вашего запроса. Вот пример кода на ${language}:<br>
+                                <div class="code-block">
+                                    <div class="code-header">
+                                        <span>Код на ${language}</span>
+                                        <button class="copy-code-btn" onclick="navigator.clipboard.writeText('${templates[firstKey].replace(/'/g, "\\'")}')">Копировать</button>
+                                    </div>
+                                    <pre><code>${codeContent}</code></pre>
+                                </div>` :
+                                currentLanguage === 'en' ? 
+                                `Did not find a specific example for your request. Here is an example of ${language} code:<br>
+                                <div class="code-block">
+                                    <div class="code-header">
+                                        <span>${language} code</span>
+                                        <button class="copy-code-btn" onclick="navigator.clipboard.writeText('${templates[firstKey].replace(/'/g, "\\'")}')">Copy</button>
+                                    </div>
+                                    <pre><code>${codeContent}</code></pre>
+                                </div>` :
+                                `Kein spezifisches Beispiel für Ihre Anfrage gefunden. Hier ist ein Beispiel für ${language}-Code:<br>
+                                <div class="code-block">
+                                    <div class="code-header">
+                                        <span>${language} Code</span>
+                                        <button class="copy-code-btn" onclick="navigator.clipboard.writeText('${templates[firstKey].replace(/'/g, "\\'")}')">Kopieren</button>
+                                    </div>
+                                    <pre><code>${codeContent}</code></pre>
+                                </div>`;
+                        }
+                    }
+                }
+                
                 // Поиск маршрутов
                 if (/(тутаев|tutaev).*(москв|moscow|moskau).*(восточ|east|ost)/.test(lowerMessage) || 
                     /(маршрут|route|weg|как.*доехать|how.*to.*get|wie.*komme)/.test(lowerMessage)) {
@@ -1764,6 +1951,13 @@
                         currentLanguage === 'en' ? 
                         "To build a route, specify the departure and destination points more specifically. For example: 'How to get from Tutaev to East Station in Moscow?'" :
                         "Um eine Route zu erstellen, geben Sie den Abfahrts- und Zielort genauer an. Zum Beispiel: 'Wie komme ich von Tutaev zum Ostbahnhof in Moskau?'";
+                }
+                
+                // Поиск в базе данных вопросов
+                for (const question in questionDatabase) {
+                    if (lowerMessage.includes(question)) {
+                        return questionDatabase[question];
+                    }
                 }
                 
                 // Приветствия
@@ -1823,10 +2017,10 @@
                 // Вопросы о возможностях
                 if (/(что ты умеешь|возможност|функци|can you|was kannst|fähig)/.test(lowerMessage)) {
                     return currentLanguage === 'ru' ? 
-                        "Я могу:\n- Генерировать тексты и рассказы\n- Сочинять стихи и поэзию\n- Давать советы и рекомендации\n- Рассказывать интересные факты\n- Помогать с построением маршрутов\n- Генерировать изображения по описанию\n- Общаться на различные темы\n\nЧто вас интересует?" :
+                        "Я могу:\n- Генерировать тексты и рассказы\n- Сочинять стихи и поэзию\n- Давать советы и рекомендации\n- Рассказывать интересные факты\n- Помогать с построением маршрутов\n- Генерировать изображения по описанию\n- Генерировать код на различных языках\n- Отвечать на вопросы из базы знаний\n- Общаться на различные темы\n\nЧто вас интересует?" :
                         currentLanguage === 'en' ? 
-                        "I can:\n- Generate texts and stories\n- Compose poems and poetry\n- Give advice and recommendations\n- Tell interesting facts\n- Help with building routes\n- Generate images from descriptions\n- Communicate on various topics\n\nWhat are you interested in?" :
-                        "Ich kann:\n- Texte und Geschichten generieren\n- Gedichte und Poesie komponieren\n- Ratschläge und Empfehlungen geben\n- Interessante Fakten erzählen\n- Beim Erstellen von Routen helfen\n- Bilder aus Beschreibungen generieren\n- Zu verschiedenen Themen kommunizieren\n\nWas interessiert Sie?";
+                        "I can:\n- Generate texts and stories\n- Compose poems and poetry\n- Give advice and recommendations\n- Tell interesting facts\n- Help with building routes\n- Generate images from descriptions\n- Generate code in various languages\n- Answer questions from the knowledge base\n- Communicate on various topics\n\nWhat are you interested in?" :
+                        "Ich kann:\n- Texte und Geschichten generieren\n- Gedichte und Poesie komponieren\n- Ratschläge und Empfehlungen geben\n- Interessante Fakten erzählen\n- Beim Erstellen von Routen helfen\n- Bilder aus Beschreibungen generieren\n- Code in verschiedenen Sprachen generieren\n- Fragen aus der Wissensdatenbank beantworten\n- Zu verschiedenen Themen kommunizieren\n\nWas interessiert Sie?";
                 }
                 
                 // Вопросы о создателе
@@ -1897,7 +2091,14 @@
             function addAIMessage(message) {
                 const messageElement = document.createElement('div');
                 messageElement.classList.add('message', 'ai-message');
-                messageElement.innerHTML = message.replace(/\n/g, '<br>');
+                
+                // Если сообщение содержит HTML (например, код), используем innerHTML
+                if (/<[a-z][\s\S]*>/i.test(message)) {
+                    messageElement.innerHTML = message;
+                } else {
+                    messageElement.innerHTML = message.replace(/\n/g, '<br>');
+                }
+                
                 chatMessages.appendChild(messageElement);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
